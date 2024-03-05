@@ -1,0 +1,24 @@
+today: 
+-first enhance the login and register mechanism using react hook form and react query
+-all users API requests and endpoints
+-- resources: 
+---[ ] requirement of auth component using HOC
+---[-] get users data =>GET: /users 
+---[-] get current user =>GET: /user
+---[ ] get single user =>GET: /user/:id
+---[ ] add user =>POST: /user/add
+---[ ] update user =>POST: /user/edit/:id
+---[ ] delete user =>DELETE: /user/:id
+
+type Types = {
+  response?: {
+    data?: {
+      errors?: {
+        name?: string,
+        email?: string,
+        password?: string,
+      },
+      message?: string
+    }
+  }
+}
