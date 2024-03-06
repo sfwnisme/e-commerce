@@ -1,43 +1,32 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AddUserInputs, ErrorResponseType } from "../../../types/Types";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { useMutation } from "@tanstack/react-query";
 import { AXIOS, USER } from "../../../utils/AXIOS";
-import { Button, Label, Select, TextInput } from "flowbite-react";
-import * as yup from "yup";
+import { Label, Select, TextInput } from "flowbite-react";
 import { toast } from "react-toastify";
-
-const schema = yup.object({
-  name: yup
-    .string()
-    .required("name is required")
-    .min(3, "name should be at least 3 characters")
-    .max(255, "name should be less than 255 characters"),
-  email: yup.string().email().required("email is required"),
-  password: yup
-    .string()
-    .required("password is required")
-    .min(6, "password should be at least 6 characters")
-    .max(100, "password should be less than 100 characters"),
-  role: yup.string().required("role is required"),
-});
+import { AddUserYupSchema } from "../../../utils/yupSchema";
+import UsersRoleOption from "../../../components/UsersRoleOption";
+import Btn from "../../../components/Btn";
 
 const AddUser = () => {
   // mutation
-  const { mutateAsync } = useMutation({
-    mutationKey: [`add${USER}` || "adduser"],
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: [`add${USER}` || "addUser"],
     mutationFn: (data: AddUserInputs) => AXIOS.post(`${USER}/add`, data),
   });
 
   const {
-    trigger,
     register,
     handleSubmit,
-    watch,
+    getValues,
     formState: { errors, isValid },
-  } = useForm<AddUserInputs>({ resolver: yupResolver(schema) });
+  } = useForm<AddUserInputs>({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    resolver: yupResolver(AddUserYupSchema),
+  });
 
   const onSubmit: SubmitHandler<AddUserInputs> = async (data) => {
     try {
@@ -54,15 +43,14 @@ const AddUser = () => {
     }
   };
 
-  console.log(watch());
-
+  console.log("values ", getValues("name"));
   return (
     <div className="flex items-center justify-center w-full">
       <div className="">
         <h1 className="text-xl font-bold mb-2">Create user</h1>
         <hr className="border-gray-500 mb-2" />
         <form
-          className="flex w-full flex-col gap-4"
+          className="flex max-w-full flex-col gap-4 w-96"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div>
@@ -75,11 +63,17 @@ const AddUser = () => {
               placeholder="name@flowbite.com"
               required
               shadow
+              color={
+                getValues("name")
+                  ? errors?.name?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
               {...register("name")}
-              onBlur={() => trigger("name")}
             />
+            <small className="text-red-600">{errors?.name?.message}</small>
           </div>
-          <small className="text-red-600">{errors?.name?.message}</small>
           <div>
             <div className="mb-2 block">
               <Label htmlFor="email" value="Your email" />
@@ -90,11 +84,17 @@ const AddUser = () => {
               placeholder="sfwn@sfwn.me"
               required
               shadow
+              color={
+                getValues("email")
+                  ? errors?.email?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
               {...register("email")}
-              onBlur={() => trigger("email")}
             />
+            <small className="text-red-600">{errors?.email?.message}</small>
           </div>
-          <small className="text-red-600">{errors?.email?.message}</small>
           <div>
             <div className="mb-2 block">
               <Label htmlFor="password" value="Your password" />
@@ -105,31 +105,46 @@ const AddUser = () => {
               placeholder="Your password"
               required
               shadow
+              color={
+                getValues("password")
+                  ? errors?.password?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
               {...register("password")}
-              onBlur={() => trigger("password")}
             />
+            <small className="text-red-600">{errors?.password?.message}</small>
           </div>
-          <small className="text-red-600">{errors?.password?.message}</small>
           <div className="max-w-md">
             <div className="mb-2 block">
-              <Label htmlFor="countries" value="Select your country" />
+              <Label htmlFor="roles" value="Select the role" />
             </div>
             <Select
-              id="countries"
+              id="roles"
               required
+              color={
+                getValues("role")
+                  ? errors?.role?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
               {...register("role")}
-              onBlur={() => trigger("role")}
             >
-              <option>admin</option>
-              <option>product manager</option>
-              <option>writer</option>
-              <option>user</option>
+              <UsersRoleOption />
             </Select>
+            <small className="text-red-600">{errors?.role?.message}</small>
           </div>
-          <small className="text-red-600">{errors?.role?.message}</small>
-          <Button type="submit" onClick={handleSubmit(onSubmit)}>
-            Register new account
-          </Button>
+          <Btn
+            text="Add"
+            color="blue"
+            size="sm"
+            type="submit"
+            isValid={isValid}
+            isLoading={isPending}
+            onClick={handleSubmit(onSubmit)}
+          />
         </form>
       </div>
     </div>

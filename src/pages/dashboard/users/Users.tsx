@@ -3,19 +3,21 @@ import { Label, Select, Table } from "flowbite-react";
 import UsersList from "./UsersList";
 import { useGetCurrentUser } from "../../../hooks/use-get-current-user";
 import { useState } from "react";
+import { AXIOS, USER } from "../../../utils/AXIOS";
+import { useMutation } from "@tanstack/react-query";
 
 const Users = () => {
   const [limit, setLimit] = useState<number>(100);
   const [pages, setPages] = useState<number>(1);
 
-  const query = useGetCurrentUser();
-  console.log("current user ", query);
+  // const handleRemoveUser = async () => {};
+
   return (
     <div className="container mx-auto px-4 mt-4">
       <h1 className="text-xl font-bold mb-2">Users</h1>
       <div className="max-w-md">
         <div className="mb-2 block">
-          <Label htmlFor="countries" value="Select your country" />
+          <Label htmlFor="roles" value="Select the role" />
         </div>
         <Select
           id="countries"

@@ -5,7 +5,7 @@ const fetching = async (endpoint: string) => await AXIOS.get(`${endpoint}`);
 
 export const useGetCurrentUser = () => {
   const query = useQuery({
-    queryKey: ["endpoint", "id"],
+    queryKey: [USER, "currentUser"],
     queryFn: () => fetching(USER),
   });
 

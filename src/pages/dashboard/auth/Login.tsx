@@ -4,36 +4,30 @@ import { Button, Label, TextInput } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AXIOS, LOGIN } from "../../../utils/AXIOS";
 import { setCookie } from "../../../utils/COOKIES";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { ErrorResponseType, LoginInputs } from "../../../types/Types";
-
-const schema = yup.object({
-  email: yup.string().email().required("email is required"),
-  password: yup
-    .string()
-    .required("password is required")
-    .min(6, "password should be at least 6 characters")
-    .max(100, "password should be less than 100 characters"),
-});
+import { loginYupSchema } from "../../../utils/yupSchema";
+import Btn from "../../../components/Btn";
 
 const Login = () => {
   // react query
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationKey: [LOGIN || "login"],
     mutationFn: (data: LoginInputs) => AXIOS.post(`${LOGIN}`, data),
   });
 
   const {
-    trigger,
     register,
     handleSubmit,
     formState: { errors, isValid },
+    getValues,
   } = useForm<LoginInputs>({
-    resolver: yupResolver(schema),
+    mode: "onChange",
+    reValidateMode: "onChange",
+    resolver: yupResolver(loginYupSchema),
   });
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
@@ -72,9 +66,15 @@ const Login = () => {
               id="email1"
               type="email"
               placeholder="name@flowbite.com"
-              // required
-              {...register("email", { required: true })}
-              onBlur={() => trigger("email")}
+              required
+              color={
+                getValues("email")
+                  ? errors?.email?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
+              {...register("email")}
             />
             <small className="text-red-600">{errors?.email?.message}</small>
           </div>
@@ -85,15 +85,27 @@ const Login = () => {
             <TextInput
               id="password1"
               type="password"
-              // required
-              {...register("password", { required: true })}
-              onBlur={() => trigger("email")}
+              required
+              color={
+                getValues("password")
+                  ? errors?.password?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
+              {...register("password")}
             />
             <small className="text-red-600">{errors?.password?.message}</small>
           </div>
-          <Button type="submit" disabled={!isValid}>
-            Submit
-          </Button>
+          <Btn
+            text="Login"
+            color="blue"
+            size="sm"
+            type="submit"
+            isValid={isValid}
+            isLoading={isPending}
+            onClick={handleSubmit(onSubmit)}
+          />
         </form>
       </div>
     </div>

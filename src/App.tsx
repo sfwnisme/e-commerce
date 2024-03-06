@@ -8,12 +8,13 @@ const App = () => {
     // document.documentElement.classList.add("dark");
   }, []);
 
+
   return (
     <div className="">
       <Outlet />
       <ToastContainer
         position="top-right"
-        autoClose={1500}
+        autoClose={2500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

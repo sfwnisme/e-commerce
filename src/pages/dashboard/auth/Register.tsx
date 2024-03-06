@@ -1,44 +1,33 @@
 "use client";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AXIOS, REGISTER } from "../../../utils/AXIOS";
-import Cookie from "cookie-universal";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
 import { setCookie } from "../../../utils/COOKIES";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { ErrorResponseType, RegsiterInputs } from "../../../types/Types";
-
-const schema = yup.object({
-  name: yup
-    .string()
-    .required("name is required")
-    .min(3, "name should be at least 3 characters")
-    .max(255, "name should be less than 255 characters"),
-  email: yup.string().email().required("email is required"),
-  password: yup
-    .string()
-    .required("password is required")
-    .min(6, "password should be at least 6 characters")
-    .max(100, "password should be less than 100 characters"),
-});
+import { registerYupSchema } from "../../../utils/yupSchema";
+import Btn from "../../../components/Btn";
 
 const Register = () => {
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationKey: [REGISTER || "register"],
     mutationFn: async (data: RegsiterInputs) =>
       AXIOS.post(`/${REGISTER}`, data),
   });
 
   const {
-    trigger,
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<RegsiterInputs>({ resolver: yupResolver(schema) });
+    getValues,
+  } = useForm<RegsiterInputs>({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    resolver: yupResolver(registerYupSchema),
+  });
 
   const onSubmit: SubmitHandler<RegsiterInputs> = async (data) => {
     try {
@@ -71,14 +60,16 @@ const Register = () => {
             <TextInput
               id="name"
               type="name"
-              placeholder="Safwan Mohamed"
               required
               shadow
-              {...register("name", {
-                required: true,
-                minLength: 3,
-              })}
-              onBlur={() => trigger("name")}
+              color={
+                getValues("name")
+                  ? errors?.name?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
+              {...register("name")}
             />
             <small className="text-red-600">{errors?.name?.message}</small>
           </div>
@@ -91,8 +82,14 @@ const Register = () => {
               type="email"
               required
               shadow
-              {...register("email", { required: true })}
-              onBlur={() => trigger("email")}
+              color={
+                getValues("email")
+                  ? errors?.email?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
+              {...register("email")}
             />
           </div>
           <small className="text-red-600">{errors?.email?.message}</small>
@@ -105,14 +102,26 @@ const Register = () => {
               type="password"
               required
               shadow
-              {...register("password", { required: true, minLength: 6 })}
-              onBlur={() => trigger("password")}
+              color={
+                getValues("password")
+                  ? errors?.password?.message
+                    ? "failure"
+                    : "success"
+                  : "default"
+              }
+              {...register("password")}
             />
           </div>
           <small className="text-red-600">{errors?.password?.message}</small>
-          <Button type="submit" disabled={!isValid}>
-            Register new account
-          </Button>
+          <Btn
+            text="Register"
+            color="blue"
+            size="sm"
+            type="submit"
+            isValid={isValid}
+            isLoading={isPending}
+            onClick={handleSubmit(onSubmit)}
+          />
         </form>
       </div>
     </div>
