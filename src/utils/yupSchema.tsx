@@ -47,3 +47,18 @@ export const UpdateUserYupSchema = yup.object({
   email: yup.string().email().required("email is required"),
   role: yup.string().required("role is required"),
 });
+
+/**
+ * -----------------------------
+ * Categories schemas
+ * -----------------------------
+ */
+
+export const AddCategoryYupSchema = yup.object({
+  title: yup
+    .string()
+    .required("title is required")
+    .min(2, "title should be at least 2 characters")
+    .max(100, "title should be less than 100 characters"),
+  image: yup.mixed().required("image is required"),
+});

@@ -24,9 +24,9 @@ export const LOGIN: string = "login";
 export const LOGOUT: string = "logout";
 
 // data endpoints
-export const USERS: string = "users";
-export const USER: string = "user";
-export const CATEGORY: string = "category";
-export const CATEGORIES: string = "categories";
-export const PRODUCTS: string = "products";
-export const PRODUCT: string = "product";
+export const USERS = "users";
+export const USER = "user";
+export const CATEGORY = "category";
+export const CATEGORIES = "categories";
+export const PRODUCTS = "products";
+export const PRODUCT = "product";

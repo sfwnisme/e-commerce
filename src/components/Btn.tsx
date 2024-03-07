@@ -42,7 +42,7 @@ const Btn = (props: Props) => {
       {isLoading ? (
         <>
           <Spinner size={size || "sm"} color={color || "primary"} />
-          <span className="pl-3">Loading...</span>
+          {text ? <span className="pl-3">Loading...</span> : null}
         </>
       ) : (
         text || node

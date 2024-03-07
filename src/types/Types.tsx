@@ -46,6 +46,19 @@ type UpdateUserInputsNames = "name" | "email" | "role";
 export type AddUserInputs = Record<AddUserInputsNames, string>;
 export type UdpateUserInput = Record<UpdateUserInputsNames, string>;
 
+// categories
+export type CategoriesDataType = {
+  id: number;
+  title: string;
+  image: string;
+};
+
+type AddCategoryInputsNames = "title" | "image";
+export type AddCategoryInputs = {
+  title: string;
+  image: File;
+};
+
 /**
  * -----------------------------
  * API requests types
@@ -62,6 +75,6 @@ export type DataType = {
 export type ApiIdRequest = (id: string) => Promise<void>;
 export type handleRemoveUserType = (data: DataType) => Promise<void>;
 
-export interface UpdateUserTypes<T extends string> {
+export interface UpdateUserTypes<T> {
   [key: string]: T;
 }

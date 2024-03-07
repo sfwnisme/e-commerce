@@ -22,7 +22,7 @@ const UserDropDown = () => {
             label={
               <Avatar
                 alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                img="https://scontent.fjed2-2.fna.fbcdn.net/v/t39.30808-1/423062225_921896242705499_4366533540076828665_n.jpg?stp=dst-jpg_p320x320&_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_ohc=IGTTPC_7mcUAX-GW__4&_nc_ht=scontent.fjed2-2.fna&oh=00_AfDTRzzT7k3MuD4BI7KQSFnQ7-BeuSB6x0vS5OQITfWADA&oe=65ED99A4"
                 rounded
               />
             }
@@ -45,7 +45,9 @@ const UserDropDown = () => {
                 <Dropdown.Item>Dashboard</Dropdown.Item>
               </NavLink>
             ) : null}
-            <Dropdown.Item>Profile</Dropdown.Item>
+            <NavLink to="/user">
+              <Dropdown.Item>Profile</Dropdown.Item>
+            </NavLink>
             <Dropdown.Divider />
             <Dropdown.Item onClick={logout}>Sign out</Dropdown.Item>
           </Dropdown>

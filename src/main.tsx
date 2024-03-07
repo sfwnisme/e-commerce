@@ -19,6 +19,7 @@ import Register from "./pages/dashboard/auth/Register.tsx";
 import Login from "./pages/dashboard/auth/Login.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import User from "./pages/dashboard/users/User.tsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
           {
             path: "/login",
             element: <Login />,
+          },
+          {
+            path: "user",
+            element: <User />,
           },
         ],
       },

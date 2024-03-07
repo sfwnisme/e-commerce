@@ -25,6 +25,8 @@ const DashboardSideBar = ({ toggle }: { toggle: boolean }) => {
       className={`
       border-r border-b ${toggle ? "block" : "hidden"} sm:block basis-28
       h-[calc(100vh-61.6px)]
+      sticky
+      top-0
       `}
     >
       <Sidebar.Logo

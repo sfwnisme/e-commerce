@@ -1,10 +1,7 @@
 "use client";
 import { Label, Select, Table } from "flowbite-react";
 import UsersList from "./UsersList";
-import { useGetCurrentUser } from "../../../hooks/use-get-current-user";
 import { useState } from "react";
-import { AXIOS, USER } from "../../../utils/AXIOS";
-import { useMutation } from "@tanstack/react-query";
 
 const Users = () => {
   const [limit, setLimit] = useState<number>(100);

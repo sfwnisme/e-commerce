@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Label, TextInput } from "flowbite-react";
+import {  Label, TextInput } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AXIOS, LOGIN } from "../../../utils/AXIOS";
 import { setCookie } from "../../../utils/COOKIES";

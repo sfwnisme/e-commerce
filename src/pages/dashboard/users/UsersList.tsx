@@ -11,7 +11,7 @@ import {
   ErrorResponseType,
   handleRemoveUserType,
 } from "../../../types/Types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import Btn from "../../../components/Btn";
@@ -22,10 +22,11 @@ const removeUserRequest: ApiIdRequest = async (id) =>
   await AXIOS.delete(`${USER}/${id}`);
 
 const UsersList = ({ limit, pages }) => {
-  const [userId, setUserId] = useState<undefined | string>(undefined);
-
+  const [userId, setUserId] = useState<number>();
+  const userIdRef = useRef<number | null>(null);
   // users request from the custom hook
   const users = useGetData(USERS, limit, pages);
+  console.log("user id res ===================", userIdRef);
 
   // remove user
   const { mutateAsync, isPending } = useMutation({
@@ -37,6 +38,7 @@ const UsersList = ({ limit, pages }) => {
     const { id, name } = data;
     console.log("is it number", id);
     setUserId(id);
+    userIdRef.current = Number(id);
     try {
       const res = await mutateAsync(`${id}`);
       users?.refetch();
@@ -50,7 +52,7 @@ const UsersList = ({ limit, pages }) => {
         type: "error",
       });
     } finally {
-      setUserId(undefined);
+      userIdRef.current = null;
     }
   };
 
@@ -67,7 +69,8 @@ const UsersList = ({ limit, pages }) => {
           size="sm"
           outline
           type="submit"
-          isLoading={isPending}
+          isLoading={userIdRef.current == user?.id ? isPending : false}
+          onClick={() => handleRemoveUser(user)}
         />
         <NavLink to={`edit/${user?.id}`} className="border rounded-lg">
           <Btn
@@ -76,7 +79,6 @@ const UsersList = ({ limit, pages }) => {
             size="sm"
             outline
             type="submit"
-            isLoading={isPending}
           />
         </NavLink>
       </Table.Cell>
