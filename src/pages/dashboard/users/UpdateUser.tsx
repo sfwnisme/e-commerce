@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Label, Select, Spinner, TextInput } from "flowbite-react";
+import { Label, Select, TextInput } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UpdateUserYupSchema } from "../../../utils/yupSchema";
 import { useMutation } from "@tanstack/react-query";
@@ -16,7 +16,11 @@ import Btn from "../../../components/Btn";
 const UpdateUser = () => {
   const { id } = useParams();
 
-  const { data: userData, isLoading, isError } = useGetSingleData(USER, id);
+  const {
+    data: userData,
+    isLoading,
+    isError,
+  } = useGetSingleData(USER, id as string);
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["updateUser"],
@@ -40,21 +44,21 @@ const UpdateUser = () => {
   });
 
   // console.log("before", isLoadingInputs);
-  useEffect(() => {
-    if (userData) {
-      setValue(
-        "userData",
-        {
-          name: userData?.data?.name,
-          email: userData?.data?.email,
-          role: userData?.data?.role,
-        },
-        {
-          shouldDirty: true,
-        }
-      );
-    }
-  }, [id, userData, setValue]);
+  // useEffect(() => {
+  //   if (userData) {
+  //     setValue(
+  //       "userData",
+  //       {
+  //         name: userData?.data?.name,
+  //         email: userData?.data?.email,
+  //         role: userData?.data?.role,
+  //       },
+  //       {
+  //         shouldDirty: true,
+  //       }
+  //     );
+  //   }
+  // }, [id, userData, setValue]);
 
   const onSubmit: SubmitHandler<UdpateUserInput> = async (data) => {
     try {

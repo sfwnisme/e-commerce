@@ -5,16 +5,20 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { AddCategoryYupSchema } from "../../../utils/yupSchema";
 import { useMutation } from "@tanstack/react-query";
 import { AXIOS, CATEGORY } from "../../../utils/AXIOS";
-import { AddCategoryInputs, ErrorResponseType } from "../../../types/Types";
+import { ErrorResponseType } from "../../../types/Types";
 import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { useState } from "react";
 
+interface Inputs {
+  title: string;
+  image: File;
+}
 const AddCategory = () => {
-  const [image, setImage] = useState<File | null>(null);
-  const { mutateAsync } = useMutation({
+  const [image, setImage] = useState<string | null>(null);
+  const { mutateAsync, isPending } = useMutation({
     mutationKey: ["AddCategory"],
-    mutationFn: async (data: AddCategoryInputs) =>
+    mutationFn: async (data: Inputs) =>
       await AXIOS.post(`${CATEGORY}/add`, data),
   });
 
@@ -23,16 +27,16 @@ const AddCategory = () => {
     handleSubmit,
     formState: { errors, isValid },
     watch,
-  } = useForm<AddCategoryInputs>({
+  } = useForm<Inputs>({
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(AddCategoryYupSchema),
   });
 
-  console.log("watcher", watch("image"));
+  console.log("watcher", watch());
   const FD = new FormData();
 
-  const onSubmit: SubmitHandler<AddCategoryInputs> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     FD.append("image", image);
     FD.append("title", data.title);
     try {
@@ -50,7 +54,7 @@ const AddCategory = () => {
   return (
     <div className="flex items-center justify-center w-full">
       <div className="">
-        <h1 className="text-xl font-bold mb-2">Create user</h1>
+        <h1 className="text-xl font-bold mb-2">Create category</h1>
         <hr className="border-gray-500 mb-2" />
         <form
           className="flex max-w-md flex-col gap-4"
@@ -63,7 +67,6 @@ const AddCategory = () => {
             <TextInput
               id="title"
               type="text"
-              placeholder="name@flowbite.com"
               required
               shadow
               {...register("title")}
@@ -81,7 +84,14 @@ const AddCategory = () => {
               onChange={(e) => setImage(e?.target?.files[0])}
             />
           </div>
-          <Btn text="Add" color="blue" size="sm" type="submit" />
+          <Btn
+            text="Add"
+            color="blue"
+            size="sm"
+            type="submit"
+            isValid={isValid}
+            isLoading={isPending}
+          />
         </form>
       </div>
     </div>

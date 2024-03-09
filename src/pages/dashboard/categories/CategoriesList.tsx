@@ -14,7 +14,8 @@ import { useRef } from "react";
 const CategoriesList = ({ limit, pages }) => {
   const categoryIdRef = useRef<number | null>(null);
 
-  const query = useGetData(CATEGORIES, limit, pages);
+  const categories = useGetData(CATEGORIES, limit, pages);
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (id: number | undefined) =>
       await AXIOS.delete(`${CATEGORY}/${id}`),
@@ -40,7 +41,7 @@ const CategoriesList = ({ limit, pages }) => {
     }
   };
 
-  const categoriesList = query?.data?.data?.data?.map(
+  const categoriesList = categories?.data?.data?.data?.map(
     (category: CategoriesDataType) => (
       <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
         <Table.Cell>{category?.id}</Table.Cell>

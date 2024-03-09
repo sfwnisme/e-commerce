@@ -55,8 +55,8 @@ export type CategoriesDataType = {
 
 type AddCategoryInputsNames = "title" | "image";
 export type AddCategoryInputs = {
-  title: string;
-  image: File;
+  title?: string;
+  image?: File;
 };
 
 /**

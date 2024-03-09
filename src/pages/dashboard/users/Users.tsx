@@ -2,9 +2,11 @@
 import { Label, Select, Table } from "flowbite-react";
 import UsersList from "./UsersList";
 import { useState } from "react";
+import PagePagination from "../../../components/Pagination";
+import { USERS } from "../../../utils/AXIOS";
 
 const Users = () => {
-  const [limit, setLimit] = useState<number>(100);
+  const [limit, setLimit] = useState<number>(3);
   const [pages, setPages] = useState<number>(1);
 
   // const handleRemoveUser = async () => {};
@@ -12,20 +14,32 @@ const Users = () => {
   return (
     <div className="container mx-auto px-4 mt-4">
       <h1 className="text-xl font-bold mb-2">Users</h1>
-      <div className="max-w-md">
-        <div className="mb-2 block">
-          <Label htmlFor="roles" value="Select the role" />
+      <div className="flex items-center gap-2 mb-2">
+        <div className="max-w-fit">
+          <div className="mb-2 block">
+            <Label htmlFor="categories" value="" />
+          </div>
+          <Select
+            id="categories"
+            onChange={(e) => setLimit(parseInt(e?.target?.value))}
+            sizing="sm"
+            color="gray"
+          >
+            <option selected value={5}>
+              5
+            </option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </Select>
         </div>
-        <Select
-          id="countries"
-          required
-          onChange={(e) => setLimit(parseInt(e?.target?.value))}
-        >
-          <option>5</option>
-          <option>10</option>
-          <option>20</option>
-          <option>50</option>
-        </Select>
+        <PagePagination
+          endpoint={USERS}
+          limit={limit}
+          pages={pages}
+          setLimit={setLimit}
+          setPages={setPages}
+        />
       </div>
       <hr className="border-gray-500 mb-2" />
       <div className="overflow-x-auto border-2">

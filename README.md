@@ -2,12 +2,14 @@
 
 ## daily tasks
 
-### 06/02/2024
+### #001
 
-[x] user profile
-[ ] users pagination
-[ ] get categories: get(categories)
-[ ] get single category: get(categoy/:id)
-[ ] update category: post(category/edit/:id)
-[ ] delete category: post(category/:id)
-[ ] add category: post(category/add)
+#### 06/02/2024 - 09/02/2024 DONE
+
+- [x] user profile
+- [x] users & categories pagination
+- [x] get categories: get(categories)
+- [x] get single category: get(categoy/:id)
+- [x] update category: post(category/edit/:id)
+- [x] delete category: post(category/:id)
+- [x] add category: post(category/add)

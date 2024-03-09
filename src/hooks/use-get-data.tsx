@@ -2,18 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import { AXIOS } from "../utils/AXIOS";
 
 const useGetData = (endpoint: string, limit: number, pages: number) => {
-  const fetching = async (endpoint: string, limit: number, pages: number) =>
-    await AXIOS.get(
-      `${endpoint}?limit=${limit.toString()}&pages=${pages.toString()}`
-    );
+  // sorting data
+  const sortByDate = (a: string, b: string) =>
+    new Date(b.created_at) - new Date(a.created_at);
+
+  // fetching data
+  const fetching = async () =>
+    await AXIOS.get(`${endpoint}?limit=${limit || 5}&page=${pages || 1}`);
 
   const query = useQuery({
     queryKey: [endpoint, limit, pages],
-    queryFn: () => fetching(endpoint, limit, pages),
+    queryFn: fetching,
     // gcTime: 0,
+    // select: (items) => items?.data?.data?.sort(sortByDate),
   });
 
-  console.log("query data for users", query);
+  console.log("query data for data", query);
 
   return { ...query };
 };
