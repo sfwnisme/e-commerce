@@ -13,22 +13,27 @@ const PagePagination = (props) => {
   const { data, isLoading } = useGetData(endpoint, limit, pages);
   const total = data?.data?.total;
   // const newTotal = total && setTotalPages(Math.ceil(total / limit));
-  // console.log("|||||||||||||||||||||", newTotal);
 
   useEffect(() => {
     total ? setTotalPages(Math.ceil(total / limit)) : null;
   });
 
+  console.log("|||||||||||||||||||||", totalPages);
+
   return (
-    <div className="flex overflow-x-auto sm:justify-center">
-      <Pagination
-        layout="pagination"
-        currentPage={pages}
-        totalPages={totalPages ?? 3}
-        onPageChange={onPageChange}
-        style={{ pointerEvents: `${isLoading ? "none" : "all"}` }}
-      />
-    </div>
+    <>
+      {totalPages !== 1 ? (
+        <div className="flex overflow-x-auto sm:justify-center">
+          <Pagination
+            layout="pagination"
+            currentPage={pages}
+            totalPages={totalPages ?? 3}
+            onPageChange={onPageChange}
+            style={{ pointerEvents: `${isLoading ? "none" : "all"}` }}
+          />
+        </div>
+      ) : null}
+    </>
   );
 };
 

@@ -24,7 +24,8 @@ in this project, I'm trying to challenge my adaptability and resilience by facin
 
 #### 09/02/2024 - present
 
-- [ ] skeleton effect for leading elements
+- [x] save pagination data on reload using cookies: maybe I can shorten the code using react custom hooks and send the cookies name and value as hook arguments
+- [x] skeleton effect for leading elements
 - [ ] get products : get(products)
 - [ ] get single product: get(product/:id)
 - [ ] update product: post(product/edit/:id)

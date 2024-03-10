@@ -11,6 +11,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { toast } from "react-toastify";
 import Btn from "../../../components/Btn";
+import Skeleton from "react-loading-skeleton";
 
 const UpdateCategory = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -51,18 +52,8 @@ const UpdateCategory = () => {
     },
   });
 
-  console.log("watching.....................", watch());
-  console.log("image", image);
-
-  // useEffect(() => {
-  //   setValue("title", categoryData?.data?.title);
-  //   setValue("image", categoryData?.data?.image);
-  //   console.log("------------------------", getValues("image"));
-  // }, [id, categoryData, setValue]);
-
   const onSubmit: SubmitHandler<AddCategoryInputs> = async (data) => {
     const FD = new FormData();
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%", data?.image);
     FD.append("image", image as File);
     FD.append("title", data?.title);
 
@@ -90,32 +81,40 @@ const UpdateCategory = () => {
             <div className="mb-2 block">
               <Label htmlFor="title" value="category title" />
             </div>
-            <TextInput
-              id="title"
-              type="text"
-              required
-              shadow
-              color={
-                getValues("title")
-                  ? errors?.title?.message
-                    ? "failure"
-                    : "success"
-                  : "default"
-              }
-              {...register("title")}
-            />
+            {isLoading ? (
+              <Skeleton height="41.6px" borderRadius={8} width={250} />
+            ) : (
+              <TextInput
+                id="title"
+                type="text"
+                required
+                shadow
+                color={
+                  getValues("title")
+                    ? errors?.title?.message
+                      ? "failure"
+                      : "success"
+                    : "default"
+                }
+                {...register("title")}
+              />
+            )}
           </div>
           <small className="text-red-600">{errors?.title?.message}</small>
           <div>
             <div className="mb-2 block">
               <Label htmlFor="image" value="Upload image" />
             </div>
-            <FileInput
-              id="image"
-              {...register("image", {
-                onChange: (e) => setImage(e?.target?.files[0]),
-              })}
-            />
+            {isLoading ? (
+              <Skeleton height="41.6px" borderRadius={8} width={250} />
+            ) : (
+              <FileInput
+                id="image"
+                {...register("image", {
+                  onChange: (e) => setImage(e?.target?.files[0]),
+                })}
+              />
+            )}
           </div>
           <small className="text-red-600">{errors?.image?.message}</small>
           <Btn

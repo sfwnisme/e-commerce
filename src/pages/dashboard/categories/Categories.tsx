@@ -1,13 +1,29 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Label, Select, Table } from "flowbite-react";
+import PagePagination from "../../../components/PagePagination";
+import { CATEGORIES } from "../../../utils/AXIOS";
 import CategoriesList from "./CategoriesList";
-import PagePagination from "../../../components/Pagination";
-import { CATEGORIES, CATEGORY } from "../../../utils/AXIOS";
+import Cookie from "cookie-universal";
+import { useLocation } from "react-router-dom";
 
 const Categories = () => {
   const [limit, setLimit] = useState<number>(5);
   const [pages, setPages] = useState<number>(1);
-  console.log(pages);
+  const { pathname } = useLocation();
+
+  const cookie = Cookie();
+  useLayoutEffect(() => {
+    if (pages > 1) {
+      cookie.set("categories-pagination", { limit: limit, pages: pages });
+    }
+  }, [limit, pages, location]);
+
+  useLayoutEffect(() => {
+    if (cookie.get("categories-pagination")) {
+      setLimit(cookie.get("categories-pagination")?.limit);
+      setPages(cookie.get("categories-pagination")?.pages);
+    }
+  }, []);
 
   return (
     <div className="container mx-auto px-4 mt-4">

@@ -12,10 +12,11 @@ import { useState } from "react";
 
 interface Inputs {
   title: string;
-  image: File;
+  image?: File;
 }
 const AddCategory = () => {
   const [image, setImage] = useState<string | null>(null);
+
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["AddCategory"],
     mutationFn: async (data: Inputs) =>
@@ -37,7 +38,11 @@ const AddCategory = () => {
   const FD = new FormData();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    FD.append("image", image);
+    console.log("|||||||||||||||||||||", data?.image?.[0]);
+    if (data?.image) {
+      const imageFile = data?.image?.[0] as File;
+      FD.append("image", imageFile);
+    }
     FD.append("title", data.title);
     try {
       const res = await mutateAsync(FD);

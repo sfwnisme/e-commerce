@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import Btn from "../../../components/Btn";
 import { FiTrash } from "react-icons/fi";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 // const removeUserRequest = async (id) => AXIOS.delete(`${USERS}/${id}`);
 const removeUserRequest: ApiIdRequest = async (id) =>
@@ -25,8 +26,9 @@ const UsersList = ({ limit, pages }) => {
   const [userId, setUserId] = useState<number>();
   const userIdRef = useRef<number | null>(null);
   // users request from the custom hook
-  const users = useGetData(USERS, limit, pages);
-  console.log("user id res ===================", userIdRef);
+  const { data, isLoading, isError } = useGetData(USERS, limit, pages);
+  const usersDATA = data?.data?.data;
+  // console.log("user id res ===================", userIdRef);
 
   // remove user
   const { mutateAsync, isPending } = useMutation({
@@ -56,7 +58,26 @@ const UsersList = ({ limit, pages }) => {
     }
   };
 
-  const usersList = users?.data?.data?.data?.map((user: DataType) => (
+  const usersListNotfound = (
+    <>
+      <Table.Row>
+        <Table.Cell colSpan={12} style={{ textAlign: "center" }}>
+          Users not found
+        </Table.Cell>
+      </Table.Row>
+    </>
+  );
+
+  const dummyArray = Array.apply(null, Array(limit));
+  const usersListLoading = dummyArray?.map(() => (
+    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+      <Table.Cell colSpan={12} style={{ textAlign: "left" }}>
+        <Skeleton width="100%" />
+      </Table.Cell>
+    </Table.Row>
+  ));
+
+  const usersList = usersDATA?.map((user: DataType) => (
     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
       <Table.Cell>{user?.id}</Table.Cell>
       <Table.Cell>{user?.name}</Table.Cell>
@@ -85,7 +106,18 @@ const UsersList = ({ limit, pages }) => {
     </Table.Row>
   ));
 
-  return <>{usersList}</>;
+  return (
+    <>
+      {isLoading
+        ? usersListLoading
+        : usersDATA?.length <= 0 && !isLoading
+        ? usersListNotfound
+        : usersList}
+      {/* {usersList} */}
+      {/* {usersListLoading} */}
+      {/* {usersListNotfound} */}
+    </>
+  );
 };
 
 export default UsersList;

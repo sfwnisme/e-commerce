@@ -10,8 +10,8 @@ import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import UsersRoleOption from "../../../components/UsersRoleOption";
 import useGetSingleData from "../../../hooks/use-get-single-data";
-import { useEffect } from "react";
 import Btn from "../../../components/Btn";
+import Skeleton from "react-loading-skeleton";
 
 const UpdateUser = () => {
   const { id } = useParams();
@@ -81,61 +81,73 @@ const UpdateUser = () => {
             <div className="mb-2 block">
               <Label htmlFor="name" value="Your name" />
             </div>
-            <TextInput
-              id="name"
-              type="name"
-              placeholder="sfwn mhmd"
-              required
-              shadow
-              color={
-                getValues("name")
-                  ? errors?.name?.message
-                    ? "failure"
-                    : "success"
-                  : "default"
-              }
-              {...register("name")}
-            />
+            {isLoading ? (
+              <Skeleton height="41.6px" borderRadius={8} />
+            ) : (
+              <TextInput
+                id="name"
+                type="name"
+                placeholder="sfwn mhmd"
+                required
+                shadow
+                color={
+                  getValues("name")
+                    ? errors?.name?.message
+                      ? "failure"
+                      : "success"
+                    : "default"
+                }
+                {...register("name")}
+              />
+            )}
             <small className="text-red-600">{errors?.name?.message}</small>
           </div>
           <div>
             <div className="mb-2 block">
               <Label htmlFor="email" value="Your email" />
             </div>
-            <TextInput
-              id="email"
-              type="email"
-              required
-              shadow
-              color={
-                getValues("email")
-                  ? errors?.email?.message
-                    ? "failure"
-                    : "success"
-                  : "default"
-              }
-              {...register("email")}
-            />
+            {isLoading ? (
+              <Skeleton height="41.6px" borderRadius={8} />
+            ) : (
+              <TextInput
+                id="email"
+                type="email"
+                required
+                shadow
+                color={
+                  getValues("email")
+                    ? errors?.email?.message
+                      ? "failure"
+                      : "success"
+                    : "default"
+                }
+                {...register("email")}
+              />
+            )}
             <small className="text-red-600">{errors?.email?.message}</small>
           </div>
           <div className="max-w-md">
             <div className="mb-2 block">
               <Label htmlFor="countries" value="Select your country" />
             </div>
-            <Select
-              id="roles"
-              required
-              color={
-                getValues("role")
-                  ? errors?.role?.message
-                    ? "failure"
-                    : "success"
-                  : "default"
-              }
-              {...register("role")}
-            >
-              <UsersRoleOption />
-            </Select>
+            {isLoading ? (
+              <Skeleton height="41.6px" borderRadius={8} />
+            ) : (
+              <Select
+                id="roles"
+                required
+                color={
+                  getValues("role")
+                    ? errors?.role?.message
+                      ? "failure"
+                      : "success"
+                    : "default"
+                }
+                {...register("role")}
+              >
+                <UsersRoleOption />
+              </Select>
+            )}
             <small className="text-red-600">{errors?.role?.message}</small>
           </div>
           <Btn
