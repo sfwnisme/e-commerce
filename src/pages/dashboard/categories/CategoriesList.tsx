@@ -5,15 +5,25 @@ import { CategoriesDataType, ErrorResponseType } from "../../../types/Types";
 import useGetData from "../../../hooks/use-get-data";
 import { FiTrash } from "react-icons/fi";
 import Btn from "../../../components/Btn";
-import { NavLink, json } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { toast } from "react-toastify";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Skeleton from "react-loading-skeleton";
 
-const CategoriesList = ({ limit, pages }) => {
-  const categoryIdRef = useRef<number | null>(null);
+interface Props {
+  limit: number;
+  pages: number;
+}
+type DataType = {
+  id?: number | undefined;
+  title?: string | undefined;
+  image?: string | undefined;
+};
+
+const CategoriesList = ({ limit, pages }: Props) => {
+  const categoryIdRef = useRef<number | null>(null); // get exact deleted element to handle its loading
 
   const { data, isLoading, isError } = useGetData(CATEGORIES, limit, pages);
   const categoriesDATA = data?.data?.data;
@@ -22,11 +32,7 @@ const CategoriesList = ({ limit, pages }) => {
     mutationFn: async (id: number | undefined) =>
       await AXIOS.delete(`${CATEGORY}/${id}`),
   });
-  type DataType = {
-    id?: number | undefined;
-    title?: string | undefined;
-    image?: string | undefined;
-  };
+
   const handleRemoveCategory: (data: DataType) => Promise<void> = async (
     data
   ) => {
@@ -47,13 +53,13 @@ const CategoriesList = ({ limit, pages }) => {
     <>
       <Table.Row>
         <Table.Cell colSpan={12} style={{ textAlign: "center" }}>
-          Users not found
+          Categories not found
         </Table.Cell>
       </Table.Row>
     </>
   );
 
-  const dummyArray = Array.apply(null, Array(limit));
+  const dummyArray: string[] = Array(limit).fill("");
   const categoriesListLoading = dummyArray?.map(() => (
     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
       <Table.Cell colSpan={12} style={{ textAlign: "left" }}>

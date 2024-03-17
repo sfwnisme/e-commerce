@@ -4,9 +4,17 @@ import { Pagination } from "flowbite-react";
 import { useEffect, useState } from "react";
 import useGetData from "../hooks/use-get-data";
 
-const PagePagination = (props) => {
+interface Props<T> {
+  endpoint: "string";
+  limit: number;
+  setLimits?: number;
+  pages: number;
+  setPages?: number;
+}
+
+const PagePagination = (props: Props) => {
   const [totalPages, setTotalPages] = useState<number | null>(1);
-  const { endpoint, limit, setLimit, pages, setPages } = props;
+  const { endpoint, limit, pages, setPages } = props;
 
   const onPageChange = (page: number) => setPages(page++);
 
@@ -16,7 +24,7 @@ const PagePagination = (props) => {
 
   useEffect(() => {
     total ? setTotalPages(Math.ceil(total / limit)) : null;
-  });
+  }, [total, limit]);
 
   console.log("|||||||||||||||||||||", totalPages);
 

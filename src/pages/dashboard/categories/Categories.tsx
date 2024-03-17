@@ -25,6 +25,11 @@ const Categories = () => {
     }
   }, []);
 
+  const handleLimit = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(parseInt(e?.target?.value));
+    setPages(1);
+  };
+
   return (
     <div className="container mx-auto px-4 mt-4">
       <h1 className="text-xl font-bold mb-2">Categories</h1>
@@ -36,7 +41,7 @@ const Categories = () => {
           </div>
           <Select
             id="categories"
-            onChange={(e) => setLimit(parseInt(e?.target?.value))}
+            onChange={handleLimit}
             sizing="sm"
             color="gray"
           >

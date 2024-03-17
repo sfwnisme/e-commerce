@@ -27,3 +27,6 @@ export const getTheRole = (roleNumber: string) => {
 
   return userRole;
 };
+
+export const dummyArray: (limit: number) => string[] = (limit) =>
+  Array(limit).fill("");

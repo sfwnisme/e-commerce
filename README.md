@@ -1,6 +1,6 @@
 # NOTES
 
-#### Conclusion
+## Conclusion
 
 in this project, I'm trying to challenge my adaptability and resilience by facing new frameworks and libraries for the first time and depending on the authorized documentation, Thus you will notice some bad practices in some components It's intentional because I'm trying to simulate the real world project process approach then I'll enhance the components and the code on the final stage.
 
@@ -25,9 +25,12 @@ in this project, I'm trying to challenge my adaptability and resilience by facin
 #### 09/02/2024 - present
 
 - [x] save pagination data on reload using cookies: maybe I can shorten the code using react custom hooks and send the cookies name and value as hook arguments
-- [x] skeleton effect for leading elements
-- [ ] get products : get(products)
+- [x] skeleton effect for loading elements
+- [x] get products : get(products)
+- [ ] add product: post(product/add)
+  - [ ] create dummy data to send for the database onChange the inputs
+  - [ ] create an image post request to send the images to the API
+  - [ ] handle the loading of the data keeping in mind the loading process works normally with any network speed
 - [ ] get single product: get(product/:id)
 - [ ] update product: post(product/edit/:id)
-- [ ] add product: post(product/add)
 - [ ] remove product: post(product/:id)
