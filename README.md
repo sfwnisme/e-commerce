@@ -27,10 +27,12 @@ in this project, I'm trying to challenge my adaptability and resilience by facin
 - [x] save pagination data on reload using cookies: maybe I can shorten the code using react custom hooks and send the cookies name and value as hook arguments
 - [x] skeleton effect for loading elements
 - [x] get products : get(products)
-- [ ] add product: post(product/add)
-  - [ ] create dummy data to send for the database onChange the inputs
-  - [ ] create an image post request to send the images to the API
-  - [ ] handle the loading of the data keeping in mind the loading process works normally with any network speed
+- [x] add product: post(product/add)
+  - [x] create dummy data to send for the database onChange the inputs
+  - [x] create an image post request to send the images to the API
+  - [x] handle the loading progress bar of the image keeping in mind the loading process works normally with any network speed
 - [ ] get single product: get(product/:id)
 - [ ] update product: post(product/edit/:id)
 - [ ] remove product: post(product/:id)
+
+#### current tasks

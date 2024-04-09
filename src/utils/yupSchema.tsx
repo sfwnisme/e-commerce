@@ -62,3 +62,21 @@ export const AddCategoryYupSchema = yup.object({
     .max(100, "title should be less than 100 characters"),
   image: yup.mixed().required("image is required"),
 });
+
+/**
+ * -----------------------------
+ * Products schemas
+ * -----------------------------
+ */
+
+export const AddProductYupSchema = yup.object({
+  category: yup.number().required("category is required"),
+  title: yup.string().required("title is required").min(2, "title is required"),
+  description: yup
+    .string()
+    .required("description is required")
+    .min(2, "description is required"),
+  price: yup.number().required("price is required"),
+  discount: yup.string().required("discount is required"),
+  About: yup.string().required("about is required").min(2, "about is required"),
+});

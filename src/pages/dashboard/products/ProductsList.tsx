@@ -2,7 +2,7 @@ import { Table } from "flowbite-react";
 import { dummyArray } from "../../../utils/utils";
 import Skeleton from "react-loading-skeleton";
 import useGetData from "../../../hooks/use-get-data";
-import { PRODUCTS } from "../../../utils/AXIOS";
+import { CATEGORIES, PRODUCTS } from "../../../utils/AXIOS";
 import Btn from "../../../components/Btn";
 import { FiTrash } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
@@ -15,7 +15,7 @@ interface Props {
 }
 interface DataType<T> {
   id: number;
-  category: string;
+  category: number;
   title: string;
   description: string;
   rating?: T;
@@ -26,9 +26,23 @@ interface DataType<T> {
   status?: string | boolean;
   created_at?: Date | string;
   updated_at?: Date | string;
+  images?: {
+    id?: number;
+    product_id?: number;
+    image?: string;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+  }[];
 }
 const ProductsList = ({ limit, pages }: Props) => {
   const productIdRef = useRef<number | null>(null);
+
+  const { data: categories } = useGetData(CATEGORIES, 999999, 1);
+  console.log(typeof categories?.data?.data[0]?.id);
+  const theCategory = (id) =>
+    categories?.data?.data?.find((cate) => cate?.id === +id);
+
+  console.log(theCategory(80));
 
   const { data, isLoading, isError } = useGetData(PRODUCTS, limit, pages);
   // id | category | title | description | price | discount | About | created_at | updated_at
@@ -67,11 +81,24 @@ const ProductsList = ({ limit, pages }: Props) => {
 
   const productsList = productsDATA?.map(
     (product: DataType<string | number>) => (
-      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+      <Table.Row
+        className="bg-white dark:border-gray-700 dark:bg-gray-800"
+        key={product?.id}
+      >
         <Table.Cell>{product?.id}</Table.Cell>
         <Table.Cell>{product?.title}</Table.Cell>
+        <Table.Cell className="grid grid-cols-2">
+          {product?.images?.map((img) => (
+            <img
+              src={img?.image}
+              title={img?.image}
+              key={img?.id}
+              className="w-20"
+            />
+          ))}
+        </Table.Cell>
         <Table.Cell>
-          {product?.category}
+          {theCategory(product?.category)?.title}
           {/* {<img src={product?.image} alt="" className="h-16" />} */}
         </Table.Cell>
         <Table.Cell>{product?.price}</Table.Cell>
@@ -84,6 +111,8 @@ const ProductsList = ({ limit, pages }: Props) => {
             outline
             type="submit"
             // isLoading={productIdRef.current === product?.id ? isPending : false}
+            isValid={true}
+            isLoading={false}
             onClick={() => handleRemoveProduct(product as DataType<string>)}
           />
           <NavLink to={`edit/${product?.id}`} className="border rounded-lg">
@@ -93,6 +122,8 @@ const ProductsList = ({ limit, pages }: Props) => {
               size="sm"
               outline
               type="submit"
+              isValid={true}
+              isLoading={false}
             />
           </NavLink>
         </Table.Cell>

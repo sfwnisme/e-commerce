@@ -35,7 +35,7 @@ const Btn = (props: Props) => {
       size={size || "sm"}
       color={color}
       outline={outline || false}
-      disabled={isLoading ? true : isValid ? !isValid : false}
+      disabled={isLoading ? true : isValid ? !isValid : true}
       type={type || "submit"}
       onClick={onClick ? onClick : undefined}
     >

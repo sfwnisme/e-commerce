@@ -90,6 +90,7 @@ const UsersList = ({ limit, pages }) => {
           size="sm"
           outline
           type="submit"
+          isValid={true}
           isLoading={userIdRef.current == user?.id ? isPending : false}
           onClick={() => handleRemoveUser(user)}
         />
@@ -100,6 +101,8 @@ const UsersList = ({ limit, pages }) => {
             size="sm"
             outline
             type="submit"
+            isValid={true}
+            isLoading={false}
           />
         </NavLink>
       </Table.Cell>

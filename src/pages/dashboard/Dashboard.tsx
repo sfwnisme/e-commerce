@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import DashboardNav from "./DashboardNav";
 import DashboardSideBar from "./DashboardSideBar";
 import { useState } from "react";
-import withAuth from "../../utils/withAuth";
 
 const Dashboard = () => {
   const [toggle, setToggle] = useState<boolean>(false);
@@ -11,7 +10,7 @@ const Dashboard = () => {
       <DashboardNav setToggle={setToggle} />
       <div className="flex items-start justify-start gap-4">
         <DashboardSideBar toggle={toggle} />
-        <div className="w-full mt-4 overflow-x-auto">
+        <div className="w-full mt-4 overflow-x-auto min-h-screen py-10">
           <Outlet />
         </div>
       </div>

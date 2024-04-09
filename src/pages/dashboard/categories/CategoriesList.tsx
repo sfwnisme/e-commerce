@@ -82,6 +82,7 @@ const CategoriesList = ({ limit, pages }: Props) => {
           size="sm"
           outline
           type="submit"
+          isValid={true}
           isLoading={categoryIdRef.current === category?.id ? isPending : false}
           onClick={() => handleRemoveCategory(category)}
         />
@@ -92,6 +93,8 @@ const CategoriesList = ({ limit, pages }: Props) => {
             size="sm"
             outline
             type="submit"
+            isValid={true}
+            isLoading={false}
           />
         </NavLink>
       </Table.Cell>

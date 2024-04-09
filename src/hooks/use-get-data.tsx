@@ -17,8 +17,6 @@ const useGetData = (endpoint: string, limit: number, pages: number) => {
     // select: (items) => items?.data?.data?.sort(sortByDate),
   });
 
-  console.log("query data for data", query);
-
   return { ...query };
 };
 

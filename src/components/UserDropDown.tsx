@@ -10,7 +10,6 @@ const UserDropDown = () => {
   const logout = useLogout();
   const { data, isLoading, isError } = useGetCurrentUser();
   const currentUser = data?.data;
-  console.log("current user ", currentUser);
 
   return (
     <div>

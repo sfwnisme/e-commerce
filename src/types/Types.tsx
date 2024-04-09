@@ -46,7 +46,12 @@ type UpdateUserInputsNames = "name" | "email" | "role";
 export type AddUserInputs = Record<AddUserInputsNames, string>;
 export type UdpateUserInput = Record<UpdateUserInputsNames, string>;
 
-// categories
+/**
+ * -----------------------------
+ * categories types
+ * -----------------------------
+ */
+
 export type CategoriesDataType = {
   id: number;
   title: string;
@@ -58,6 +63,33 @@ export type AddCategoryInputs = {
   title?: string;
   image?: File;
 };
+
+/**
+ * -----------------------------
+ * Products types
+ * -----------------------------
+ */
+export interface AddProductInputs {
+  id?: number;
+  category: number | null;
+  title: string;
+  description: string;
+  rating?: string;
+  ratings_number?: number;
+  price?: number;
+  discount?: number;
+  About?: string;
+  status?: string | boolean;
+  created_at?: Date | string;
+  updated_at?: Date | string;
+}
+
+// category: 'Select Category',
+// title: '',
+// description: '',
+// price: '',
+// discount: '',
+// About: '',
 
 /**
  * -----------------------------

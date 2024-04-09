@@ -49,8 +49,9 @@ const Products = () => {
           <Table.Head>
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Title</Table.HeadCell>
+            <Table.HeadCell>Images</Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
-            <Table.HeadCell>Price</Table.HeadCell>
+            <Table.HeadCell>price</Table.HeadCell>
             <Table.HeadCell>Description</Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>

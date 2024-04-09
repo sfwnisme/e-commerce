@@ -28,6 +28,8 @@ const AddUser = () => {
     resolver: yupResolver(AddUserYupSchema),
   });
 
+  console.log('validation-------------', isValid)
+
   const onSubmit: SubmitHandler<AddUserInputs> = async (data) => {
     try {
       const res = await mutateAsync(data);
