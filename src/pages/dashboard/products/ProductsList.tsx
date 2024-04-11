@@ -2,12 +2,14 @@ import { Table } from "flowbite-react";
 import { dummyArray } from "../../../utils/utils";
 import Skeleton from "react-loading-skeleton";
 import useGetData from "../../../hooks/use-get-data";
-import { CATEGORIES, PRODUCTS } from "../../../utils/AXIOS";
+import { AXIOS, CATEGORIES, PRODUCT, PRODUCTS } from "../../../utils/AXIOS";
 import Btn from "../../../components/Btn";
 import { FiTrash } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
 import { useRef } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 interface Props {
   limit: number;
@@ -34,6 +36,9 @@ interface DataType<T> {
     updated_at?: Date | string;
   }[];
 }
+const removeUserRequest = async (id: string) =>
+  await AXIOS.delete(`${PRODUCT}/${id}`);
+
 const ProductsList = ({ limit, pages }: Props) => {
   const productIdRef = useRef<number | null>(null);
 
@@ -44,14 +49,32 @@ const ProductsList = ({ limit, pages }: Props) => {
 
   console.log(theCategory(80));
 
-  const { data, isLoading, isError } = useGetData(PRODUCTS, limit, pages);
+  const { data, isLoading, isError, refetch } = useGetData(
+    PRODUCTS,
+    limit,
+    pages
+  );
   // id | category | title | description | price | discount | About | created_at | updated_at
   const productsDATA = data?.data?.data;
   console.log("products", productsDATA);
   console.log(isError);
 
-  const handleRemoveProduct = (data: DataType<string>) => {
-    console.log(data);
+  const { mutate, mutateAsync } = useMutation({
+    mutationKey: ["deleteproduct"],
+    mutationFn: async (id: string) => await removeUserRequest(id),
+  });
+
+  const handleRemoveProduct = async (id: number) => {
+    try {
+      await toast.promise(mutateAsync(`${id}`), {
+        pending: "deleting",
+        success: "deleted",
+        error: "failed to delete",
+      });
+      refetch();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const productsListNotfound = (
@@ -113,7 +136,7 @@ const ProductsList = ({ limit, pages }: Props) => {
             // isLoading={productIdRef.current === product?.id ? isPending : false}
             isValid={true}
             isLoading={false}
-            onClick={() => handleRemoveProduct(product as DataType<string>)}
+            onClick={() => handleRemoveProduct(product?.id)}
           />
           <NavLink to={`edit/${product?.id}`} className="border rounded-lg">
             <Btn

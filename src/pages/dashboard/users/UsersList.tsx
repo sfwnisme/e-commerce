@@ -26,7 +26,7 @@ const UsersList = ({ limit, pages }) => {
   const [userId, setUserId] = useState<number>();
   const userIdRef = useRef<number | null>(null);
   // users request from the custom hook
-  const { data, isLoading, isError } = useGetData(USERS, limit, pages);
+  const { data, isLoading, isError, refetch } = useGetData(USERS, limit, pages);
   const usersDATA = data?.data?.data;
   // console.log("user id res ===================", userIdRef);
 
@@ -43,7 +43,7 @@ const UsersList = ({ limit, pages }) => {
     userIdRef.current = Number(id);
     try {
       const res = await mutateAsync(`${id}`);
-      users?.refetch();
+      refetch();
       console.log("remove user done", res);
       toast(`user "${name}" deleted `, {
         type: "success",

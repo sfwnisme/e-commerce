@@ -4,10 +4,11 @@ import { useForm } from "react-hook-form";
 import { AddProductYupSchema } from "../../../utils/yupSchema";
 import { AddProductInputs } from "../../../types/Types";
 import { Button, FileInput, Label, Select, TextInput } from "flowbite-react";
-import UsersRoleOption from "../../../components/UsersRoleOption";
 import CategoriesOption from "../../../components/CategoriesOption";
 import Btn from "../../../components/Btn";
 import { AXIOS, PRODUCT } from "../../../utils/AXIOS";
+import { AiOutlineClose } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 const AddProduct = () => {
   const [sendDummy, setSendDummy] = useState(false);
@@ -27,6 +28,8 @@ const AddProduct = () => {
   // refs
   const progressRef = useRef([]);
   const progressIdxRef = useRef(0);
+  const idsRef = useRef([]);
+  const imageInputRef = useRef(null);
 
   const {
     register,
@@ -44,8 +47,16 @@ const AddProduct = () => {
   const onSubmit = async (data) => {
     setFrzToEnd(true);
     try {
-      const res = await AXIOS.post(`${PRODUCT}/edit/${productId}`, data);
+      const res = await toast.promise(
+        AXIOS.post(`${PRODUCT}/edit/${productId}`, data),
+        {
+          pending: "creating product",
+          success: "product created",
+          error: "could not create the product",
+        }
+      );
       console.log(res);
+      location.pathname = "/dashboard/products";
     } catch (error) {
       console.log(error);
     } finally {
@@ -71,6 +82,28 @@ const AddProduct = () => {
     sendDummy ? null : handleDummyForm();
   };
 
+  const handleRemove = async (imgId, image, imgIdx) => {
+    const findImgId = idsRef.current[imgIdx];
+    console.log(findImgId);
+    setFrzToEnd(true);
+    try {
+      await toast.promise(AXIOS.delete(`/product-img/${imgId || findImgId}`), {
+        pending: "deleting",
+        success: "deleted",
+        error: "could not deleted",
+      });
+      setImages((prev) => prev.filter((img) => img !== image));
+      // update the deleted image ref references
+      progressIdxRef.current--;
+      progressRef.current.splice(imgIdx, 1);
+      idsRef.current.splice(imgIdx, 1);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setFrzToEnd(false);
+    }
+  };
+
   // handle the image API data posting
   const handleImages = async (e) => {
     const FD = new FormData();
@@ -81,43 +114,70 @@ const AddProduct = () => {
       FD.append("image", imagesList[i]);
       FD.append("product_id", productId);
       try {
-        const res = await AXIOS.post(`/product-img/add`, FD, {
-          onUploadProgress: (ProgressEvent) => {
-            const { loaded, total } = ProgressEvent;
-            const percent = Math.floor((loaded / total) * 100);
-            if (loaded > 10) {
-              progressRef.current[progressIdxRef.current].style.width =
-                percent + "%";
-              progressRef.current[progressIdxRef.current].setAttribute(
-                "percent-data",
-                percent
-              );
-            }
-          },
-        });
+        const res = await toast.promise(
+          AXIOS.post(`/product-img/add`, FD, {
+            onUploadProgress: (ProgressEvent) => {
+              const { loaded, total } = ProgressEvent;
+              const percent = Math.floor((loaded / total) * 100);
+              if (loaded > 10) {
+                progressRef.current[progressIdxRef.current].style.width =
+                  percent + "%";
+                progressRef.current[progressIdxRef.current].setAttribute(
+                  "percent-data",
+                  percent
+                );
+              }
+            },
+          }),
+          {
+            pending: "uploading",
+            success: "uploaded",
+            error: "could not upload",
+          }
+        );
         progressIdxRef.current++;
 
         // change the freeze statement if it reached the last image uploading
         if (i === imagesList.length - 1) {
           setFrzToEnd(false);
           console.log("last image uploaded");
+          imageInputRef.current.value = "";
         }
         console.log(res);
+        idsRef.current.push(res?.data?.id);
       } catch (error) {
         console.log(error);
       }
     }
   };
 
+  console.log("images", images);
+  console.log("ids ref", idsRef.current);
+
   // image loading DOM
   const showImages = images?.map((image, idx) => (
-    <div key={image} className="flex items-end border rounded-sm p-4">
-      <img
-        className="w-20 aspect-square mr-2 "
-        src={URL.createObjectURL(image)}
-        alt=""
-        title=""
-      />
+    <div
+      key={image}
+      className="flex flex-wrap gap-4 border rounded-sm p-4"
+      id={idsRef?.current[idx]}
+    >
+      <div className="flex gap-2  w-full">
+        <img
+          className="w-20 aspect-square mr-2 "
+          src={URL.createObjectURL(image)}
+          alt=""
+          title=""
+        />
+        <small className="flex-1">{image?.name}</small>
+        <Button
+          className="group self-start"
+          color="red"
+          onClick={() => handleRemove(idsRef?.current[idx], image, idx)}
+          disabled={frzToEnd}
+        >
+          <AiOutlineClose className="group-hover:text-red-500 cursor-pointer h-5 w-5" />
+        </Button>
+      </div>
       <span
         ref={(e) => (progressRef.current[idx] = e)}
         className={`PROGRESS h-2 bg-red-500 rounded-sm relative transition duration-1000`}
@@ -281,6 +341,7 @@ const AddProduct = () => {
               disabled={!sendDummy || frzToEnd}
               multiple
               onChange={handleImages}
+              ref={imageInputRef}
             />
           </div>
           <div className="grid grid-cols-1 gap-4">{showImages}</div>
