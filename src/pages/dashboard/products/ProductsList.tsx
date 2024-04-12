@@ -116,6 +116,7 @@ const ProductsList = ({ limit, pages }: Props) => {
               src={img?.image}
               title={img?.image}
               key={img?.id}
+              id={img?.id}
               className="w-20"
             />
           ))}

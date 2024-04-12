@@ -9,6 +9,7 @@ import Btn from "../../../components/Btn";
 import { AXIOS, PRODUCT } from "../../../utils/AXIOS";
 import { AiOutlineClose } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { shortTheText } from "../../../utils/utils";
 
 const AddProduct = () => {
   const [sendDummy, setSendDummy] = useState(false);
@@ -114,34 +115,27 @@ const AddProduct = () => {
       FD.append("image", imagesList[i]);
       FD.append("product_id", productId);
       try {
-        const res = await toast.promise(
-          AXIOS.post(`/product-img/add`, FD, {
-            onUploadProgress: (ProgressEvent) => {
-              const { loaded, total } = ProgressEvent;
-              const percent = Math.floor((loaded / total) * 100);
-              if (loaded > 10) {
-                progressRef.current[progressIdxRef.current].style.width =
-                  percent + "%";
-                progressRef.current[progressIdxRef.current].setAttribute(
-                  "percent-data",
-                  percent
-                );
-              }
-            },
-          }),
-          {
-            pending: "uploading",
-            success: "uploaded",
-            error: "could not upload",
-          }
-        );
+        const res = await AXIOS.post(`/product-img/add`, FD, {
+          onUploadProgress: (ProgressEvent) => {
+            const { loaded, total } = ProgressEvent;
+            const percent = Math.floor((loaded / total) * 100);
+            if (percent % 10 === 0) {
+              progressRef.current[progressIdxRef.current].style.width =
+                percent + "%";
+              progressRef.current[progressIdxRef.current].setAttribute(
+                "percent-data",
+                percent
+              );
+            }
+          },
+        });
         progressIdxRef.current++;
 
         // change the freeze statement if it reached the last image uploading
         if (i === imagesList.length - 1) {
           setFrzToEnd(false);
           console.log("last image uploaded");
-          imageInputRef.current.value = "";
+          // imageInputRef.current.value = "";
         }
         console.log(res);
         idsRef.current.push(res?.data?.id);
@@ -168,7 +162,9 @@ const AddProduct = () => {
           alt=""
           title=""
         />
-        <small className="flex-1">{image?.name}</small>
+        <small className="flex-1" title={image?.name}>
+          {shortTheText(image?.name, 30)}
+        </small>
         <Button
           className="group self-start"
           color="red"
@@ -181,11 +177,8 @@ const AddProduct = () => {
       <span
         ref={(e) => (progressRef.current[idx] = e)}
         className={`PROGRESS h-2 bg-red-500 rounded-sm relative transition duration-1000`}
-        // style={{ width: percent + "%" }}
         percent-data=""
-      >
-        {/* <div className="bg-red-800"></div> */}
-      </span>
+      ></span>
     </div>
   ));
 

@@ -15,19 +15,14 @@ const Products = () => {
 
   return (
     <div className="container mx-auto px-4 mt-4">
-      <h1 className="text-xl font-bold mb-2">Categories</h1>
+      <h1 className="text-xl font-bold mb-2">Products</h1>
       <hr className="border-gray-500 mb-2" />
       <div className="flex items-center gap-2 mb-2">
         <div className="max-w-fit">
           <div className="mb-2 block">
-            <Label htmlFor="categories" value="" />
+            <Label htmlFor="products" value="" />
           </div>
-          <Select
-            id="categories"
-            onChange={handleLimit}
-            sizing="sm"
-            color="gray"
-          >
+          <Select id="products" onChange={handleLimit} sizing="sm" color="gray">
             <option selected value={5}>
               5
             </option>

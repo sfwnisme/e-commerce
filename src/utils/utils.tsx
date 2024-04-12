@@ -30,3 +30,27 @@ export const getTheRole = (roleNumber: string) => {
 
 export const dummyArray: (limit: number) => string[] = (limit) =>
   Array(limit).fill("");
+
+/**
+ * --------------------------------------------------
+ * SHORT TEXT FUNCTION
+ * --------------------------------------------------
+ * limit the length of the text
+ * @param text - the text you wanna limit its length
+ * @param limit - the length you wanna limit
+ * @returns string - the shorted text
+ * @type {(text: string, limit: number) => string}
+ * @author sfwn.me
+ * --------------------------------------------------
+ */
+type ShortTextType = (text: string, limit: number) => string;
+export const shortTheText: ShortTextType = (text, limit) => {
+  let result = text;
+  if (text.length > limit) {
+    return (result = text.substring(0, limit) + "...");
+  }
+
+  return result;
+};
+
+//-------------------------------------------------------

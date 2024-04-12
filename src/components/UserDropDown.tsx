@@ -10,7 +10,7 @@ const UserDropDown = () => {
   const logout = useLogout();
   const { data, isLoading, isError } = useGetCurrentUser();
   const currentUser = data?.data;
-
+  const imageUrl = "https://avatars.githubusercontent.com/u/92028514?v=4";
   return (
     <div>
       {TOKEN ? (
@@ -18,13 +18,7 @@ const UserDropDown = () => {
           <Dropdown
             arrowIcon={false}
             inline
-            label={
-              <Avatar
-                alt="User settings"
-                img="https://scontent.fjed2-2.fna.fbcdn.net/v/t39.30808-1/423062225_921896242705499_4366533540076828665_n.jpg?stp=dst-jpg_p320x320&_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_ohc=IGTTPC_7mcUAX-GW__4&_nc_ht=scontent.fjed2-2.fna&oh=00_AfDTRzzT7k3MuD4BI7KQSFnQ7-BeuSB6x0vS5OQITfWADA&oe=65ED99A4"
-                rounded
-              />
-            }
+            label={<Avatar alt="User settings" img={imageUrl} rounded />}
           >
             <Dropdown.Header>
               <div className="flex items-center gap-2">

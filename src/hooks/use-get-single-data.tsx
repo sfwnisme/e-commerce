@@ -9,7 +9,6 @@ const useGetSingleData = (endpoint: string, id: string) => {
     queryKey: [endpoint, id],
     queryFn: () => fetching(endpoint, id),
   });
-  console.log("================================", query);
 
   return query;
 };

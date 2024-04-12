@@ -1,10 +1,10 @@
 import { useLayoutEffect, useState } from "react";
-import { Label, Select, Table } from "flowbite-react";
+import { Button, Label, Select, Table } from "flowbite-react";
 import PagePagination from "../../../components/PagePagination";
 import { CATEGORIES } from "../../../utils/AXIOS";
 import CategoriesList from "./CategoriesList";
 import Cookie from "cookie-universal";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Categories = () => {
   const [limit, setLimit] = useState<number>(5);
@@ -32,7 +32,12 @@ const Categories = () => {
 
   return (
     <div className="container mx-auto px-4 mt-4">
-      <h1 className="text-xl font-bold mb-2">Categories</h1>
+      <div className="flex justify-between my-4">
+        <h1 className="text-xl font-bold mb-2">Categories</h1>
+        <NavLink to="add">
+          <Button color="blue" size='sm'>Add New</Button>
+        </NavLink>
+      </div>
       <hr className="border-gray-500 mb-2" />
       <div className="flex items-center gap-2 mb-2">
         <div className="max-w-fit">

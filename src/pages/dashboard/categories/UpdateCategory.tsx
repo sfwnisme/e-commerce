@@ -23,32 +23,27 @@ const UpdateCategory = () => {
       await AXIOS.post(`${CATEGORY}/edit/${id}`, data),
   });
 
-  const {
-    data: categoryData,
-    isLoading,
-    isError,
-  } = useGetSingleData(CATEGORY, id as string);
+  const { data, isLoading, isError } = useGetSingleData(CATEGORY, id as string);
+  const categoryData = data?.data;
 
-  console.log("categoryData", categoryData?.data?.title);
+  console.log("categoryData", categoryData);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
     getValues,
-    setValue,
-    watch,
   } = useForm<AddCategoryInputs>({
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(AddCategoryYupSchema),
     values: {
-      // ...categoryData?.data,
+      // ...categoryData,
       title: isLoading
         ? "loading..."
         : isError && !isLoading
         ? "error!"
-        : categoryData?.data?.title,
+        : categoryData?.title,
     },
   });
 
