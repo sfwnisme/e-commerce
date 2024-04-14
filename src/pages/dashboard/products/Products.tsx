@@ -1,8 +1,9 @@
-import { Label, Select, Table } from "flowbite-react";
+import { Button, Label, Select, Table } from "flowbite-react";
 import React, { useState } from "react";
 import PagePagination from "../../../components/PagePagination";
 import { PRODUCTS } from "../../../utils/AXIOS";
 import ProductsList from "./ProductsList";
+import { NavLink } from "react-router-dom";
 
 const Products = () => {
   const [limit, setLimit] = useState(5);
@@ -15,7 +16,14 @@ const Products = () => {
 
   return (
     <div className="container mx-auto px-4 mt-4">
-      <h1 className="text-xl font-bold mb-2">Products</h1>
+      <div className="flex justify-between my-4">
+        <h1 className="text-xl font-bold mb-2">Products</h1>
+        <NavLink to="add">
+          <Button color="blue" size="sm">
+            Add New
+          </Button>
+        </NavLink>
+      </div>
       <hr className="border-gray-500 mb-2" />
       <div className="flex items-center gap-2 mb-2">
         <div className="max-w-fit">

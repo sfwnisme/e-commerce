@@ -60,7 +60,7 @@ export type CategoriesDataType = {
 
 type AddCategoryInputsNames = "title" | "image";
 export type AddCategoryInputs = {
-  title?: string;
+  title: string;
   image?: File;
 };
 
@@ -70,7 +70,7 @@ export type AddCategoryInputs = {
  * -----------------------------
  */
 export interface AddProductInputs {
-  id?: number;
+  id?: number ;
   category: number | null;
   title: string;
   description: string;

@@ -7,7 +7,7 @@ import Btn from "../../../components/Btn";
 import { FiTrash } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
@@ -58,6 +58,10 @@ const ProductsList = ({ limit, pages }: Props) => {
   const productsDATA = data?.data?.data;
   console.log("products", productsDATA);
   console.log(isError);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const { mutate, mutateAsync } = useMutation({
     mutationKey: ["deleteproduct"],

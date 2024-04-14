@@ -19,7 +19,7 @@ const UpdateCategory = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["updateCategory", id],
-    mutationFn: async (data: AddCategoryInputs) =>
+    mutationFn: async (data: FormData) =>
       await AXIOS.post(`${CATEGORY}/edit/${id}`, data),
   });
 
@@ -63,64 +63,95 @@ const UpdateCategory = () => {
     }
   };
 
+  const formLoading = (
+    <form className="flex md:w-96 flex-col gap-4">
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="title" value="Title" />
+        </div>
+        <Skeleton height={"41.6px"} borderRadius={8} />
+      </div>
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="image" value="Upload image" />
+        </div>
+        <Skeleton height={"41.6px"} borderRadius={8} />
+      </div>
+      <Btn
+        text="Update"
+        color="blue"
+        width={10}
+        size="sm"
+        outline={false}
+        type="submit"
+        isLoading={false}
+        isValid={false}
+      />
+    </form>
+  );
+
+  const formShow = (
+    <form
+      className="flex md:w-96 flex-col gap-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="title" value="Title" />
+        </div>
+        {isLoading ? (
+          <Skeleton height="41.6px" borderRadius={8} width={250} />
+        ) : (
+          <TextInput
+            id="title"
+            type="text"
+            required
+            shadow
+            color={
+              getValues("title")
+                ? errors?.title?.message
+                  ? "failure"
+                  : "success"
+                : "default"
+            }
+            {...register("title")}
+          />
+        )}
+      </div>
+      <small className="text-red-600">{errors?.title?.message}</small>
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="image" value="Upload image" />
+        </div>
+        {isLoading ? (
+          <Skeleton height="41.6px" borderRadius={8} width={250} />
+        ) : (
+          <FileInput
+            id="image"
+            {...register("image", {
+              onChange: (e) => setImage(e?.target?.files[0]),
+            })}
+          />
+        )}
+      </div>
+      <small className="text-red-600">{errors?.image?.message}</small>
+      <Btn
+        text="Update"
+        color="blue"
+        size="sm"
+        type="submit"
+        isValid={isValid}
+        isLoading={isPending}
+      />
+    </form>
+  );
+
   return (
     <div className="flex items-center justify-center w-full">
       <div className="">
-        <h1 className="text-xl font-bold mb-2">Update user: {id}</h1>
+        <h1 className="text-xl font-bold mb-2">Update category</h1>
         <hr className="border-gray-500 mb-2" />
-        <form
-          className="flex max-w-md flex-col gap-4"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="title" value="category title" />
-            </div>
-            {isLoading ? (
-              <Skeleton height="41.6px" borderRadius={8} width={250} />
-            ) : (
-              <TextInput
-                id="title"
-                type="text"
-                required
-                shadow
-                color={
-                  getValues("title")
-                    ? errors?.title?.message
-                      ? "failure"
-                      : "success"
-                    : "default"
-                }
-                {...register("title")}
-              />
-            )}
-          </div>
-          <small className="text-red-600">{errors?.title?.message}</small>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="image" value="Upload image" />
-            </div>
-            {isLoading ? (
-              <Skeleton height="41.6px" borderRadius={8} width={250} />
-            ) : (
-              <FileInput
-                id="image"
-                {...register("image", {
-                  onChange: (e) => setImage(e?.target?.files[0]),
-                })}
-              />
-            )}
-          </div>
-          <small className="text-red-600">{errors?.image?.message}</small>
-          <Btn
-            text="Add"
-            color="blue"
-            size="sm"
-            type="submit"
-            isValid={isValid}
-            isLoading={isPending}
-          />
-        </form>
+        {isLoading ? formLoading : formShow}
       </div>
     </div>
   );
