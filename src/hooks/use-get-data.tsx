@@ -3,8 +3,8 @@ import { AXIOS } from "../utils/AXIOS";
 
 const useGetData = (endpoint: string, limit: number, pages: number) => {
   // sorting data
-  const sortByDate = (a: string, b: string) =>
-    new Date(b.created_at) - new Date(a.created_at);
+  // const sortByDate = (a: string, b: string) =>
+  //   new Date(b.created_at) - new Date(a.created_at);
 
   // fetching data
   const fetching = async () =>

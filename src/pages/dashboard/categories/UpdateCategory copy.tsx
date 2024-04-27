@@ -21,7 +21,6 @@ const UpdateCategory = () => {
     mutationKey: ["updateCategory", id],
     mutationFn: async (data: FormData) =>
       await AXIOS.post(`${CATEGORY}/edit/${id}`, data),
-    
   });
 
   const { data, isLoading, isError } = useGetSingleData(CATEGORY, id as string);
@@ -52,6 +51,7 @@ const UpdateCategory = () => {
     const FD = new FormData();
     FD.append("image", image as File);
     FD.append("title", data?.title);
+
     try {
       const res = await mutateAsync(FD);
       toast.success("The category has been udpated successfully");

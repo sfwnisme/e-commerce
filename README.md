@@ -40,8 +40,7 @@ in this project, I'm trying to challenge my adaptability and resilience by facin
 
 - [x] forms skeleton
 - [ ] refine (AddProduct.tsx, UpdateProduct.tsx) components
-- [ ] convert AddProduct.tsx component from Axios to React Query
-- [ ] change try and catch with react query
+- [x] create reusable function for product images uploading
 
 #### tips
 

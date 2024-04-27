@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import { useGetCurrentUser } from "../../../hooks/use-get-current-user";
 import { useMutation } from "@tanstack/react-query";
-
+import { handleImagesUpload } from "../../../hooks/handleImagesUpload";
 //======================
 interface FileData {
   name: string;
@@ -36,7 +36,6 @@ const AddProduct = () => {
   const [sendDummy, setSendDummy] = useState(false);
   const [images, setImages] = useState<FileData[]>([]);
   const [productId, setProductId] = useState("");
-  const [frzToEnd, setFrzToEnd] = useState(false);
   const navigate = useNavigate();
   // const [percent, setPercent] = useState([]);
   const [dummyForm] = useState<Dummy>({
@@ -49,10 +48,12 @@ const AddProduct = () => {
   });
 
   // refs
-  const progressRef = useRef([]);
+  const progressRef = useRef<never[]>([]);
   const progressIdxRef = useRef(0);
-  const idsRef = useRef([]);
+  const idsRef = useRef<number[]>([]);
   const imageInputRef = useRef(null);
+
+  console.log(progressRef.current);
 
   // current user
   const { data, isLoading, isError } = useGetCurrentUser();
@@ -80,7 +81,6 @@ const AddProduct = () => {
       await AXIOS.post(`${PRODUCT}/edit/${productId}`, data),
   });
   const onSubmit: SubmitHandler<AddProductInputs> = async (data) => {
-    setFrzToEnd(true);
     try {
       const res = await toast.promise(mutateAsyncEdit(data), {
         pending: "creating product",
@@ -92,8 +92,6 @@ const AddProduct = () => {
       navigate(`/dashboard/products`);
     } catch (error) {
       console.log(error);
-    } finally {
-      setFrzToEnd(false);
     }
   };
 
@@ -106,14 +104,11 @@ const AddProduct = () => {
 
   const handleDummyForm = async () => {
     setSendDummy(true);
-    setFrzToEnd(true);
     try {
       const res = await mutateAsync(dummyForm);
-      setProductId(res?.data?.id);
+      setProductId(`${res?.data?.id}`);
     } catch (error) {
       console.log(error);
-    } finally {
-      setFrzToEnd(false);
     }
   };
 
@@ -130,7 +125,6 @@ const AddProduct = () => {
   const handleRemove = async (imgId, image, imgIdx) => {
     const findImgId = idsRef.current[imgIdx];
     console.log(findImgId);
-    setFrzToEnd(true);
     try {
       await toast.promise(mutateAsyncRemove(imgId || findImgId), {
         pending: "deleting",
@@ -144,57 +138,21 @@ const AddProduct = () => {
       idsRef.current.splice(imgIdx, 1);
     } catch (error) {
       console.log(error);
-    } finally {
-      setFrzToEnd(false);
     }
   };
+
+  console.log(productId);
 
   // handle the image API data posting
-  const handleImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const FD = new FormData();
-    const imagesList = (e.target as HTMLInputElement).files;
-    setImages((prev) => [...prev, ...imagesList]);
-    setFrzToEnd(true);
-    for (let i = 0; i < imagesList.length; i++) {
-      FD.append("image", imagesList[i]);
-      FD.append("product_id", productId);
-      try {
-        const res = await toast.promise(
-          AXIOS.post(`/product-img/add`, FD, {
-            onUploadProgress: (ProgressEvent) => {
-              const { loaded, total } = ProgressEvent;
-              const percent = Math.floor((loaded / total) * 100);
-              if (percent % 10 === 0) {
-                progressRef.current[progressIdxRef.current].style.width =
-                  percent + "%";
-                progressRef.current[progressIdxRef.current].setAttribute(
-                  "percent-data",
-                  percent + "%"
-                );
-              }
-            },
-          }),
-          {
-            pending: "uploading",
-            success: "uploaded",
-            error: "could not upload",
-          }
-        );
-        progressIdxRef.current++;
-
-        // change the freeze statement if it reached the last image uploading
-        if (i === imagesList.length - 1) {
-          setFrzToEnd(false);
-          console.log("last image uploaded");
-          imageInputRef.current.value = "";
-        }
-        console.log(res);
-        idsRef.current.push(res?.data?.id);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
+  const handleImages = (e: React.ChangeEvent<HTMLInputElement>) =>
+    handleImagesUpload(
+      e,
+      productId,
+      setImages,
+      progressRef,
+      progressIdxRef,
+      idsRef
+    );
 
   console.log("images", images);
   console.log("ids ref", idsRef.current);
@@ -212,7 +170,6 @@ const AddProduct = () => {
             className="group self-start w-full"
             color="red"
             onClick={() => handleRemove(idsRef?.current[idx], image, idx)}
-            disabled={frzToEnd}
           >
             <AiOutlineClose className="group-hover:text-red-500 cursor-pointer h-3 w-3" />
           </Button>
@@ -228,7 +185,7 @@ const AddProduct = () => {
           <span
             ref={(e) => (progressRef.current[idx] = e)}
             className={`PROGRESS h-1 w-0 bg-red-500 rounded-sm relative transition duration-1000`}
-            percent-data="0%"
+            // percent-data="0%"
           ></span>
         </div>
       ))}
@@ -436,7 +393,7 @@ const AddProduct = () => {
         </div>
         <FileInput
           id="file-upload"
-          disabled={!sendDummy || frzToEnd}
+          disabled={!sendDummy}
           multiple
           onChange={handleImages}
           ref={imageInputRef}
@@ -448,7 +405,7 @@ const AddProduct = () => {
         color="blue"
         size="sm"
         type="submit"
-        isValid={sendDummy && !frzToEnd}
+        isValid={sendDummy}
         isLoading={false}
         onClick={handleSubmit(onSubmit)}
       />

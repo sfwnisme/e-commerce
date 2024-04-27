@@ -15,7 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AddProductInputs, ErrorResponseType } from "../../../types/Types";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import Skeleton from "react-loading-skeleton";
-import Skele from "../../../components/Skele";
+import { handleImagesUpload } from "../../../hooks/handleImagesUpload";
 
 //======================
 interface FileData {
@@ -31,8 +31,9 @@ const UpdateProducts = () => {
   const [images, setImages] = useState<FileData[]>([]);
   const [deletedImgsIds, setDeletedImgsIds] = useState<number[]>([]);
   const [oldImgs, setOldImgs] = useState();
-  const { id } = useParams();
-
+  const { id } = useParams<string>();
+  const productId = id!;
+  console.log(productId);
   const navigate = useNavigate();
   // refs
   const progressRef = useRef([]);
@@ -124,44 +125,15 @@ const UpdateProducts = () => {
   };
 
   //===============================
-  const handleImages = async (e) => {
-    const FD = new FormData();
-    const imagesList = (e.target as HTMLInputElement).files;
-    setImages((prev) => [...prev, ...imagesList]);
-
-    for (let i = 0; i < imagesList.length; i++) {
-      FD.append("image", imagesList[i]);
-      FD.append("product_id", id);
-      try {
-        const res = await toast.promise(
-          AXIOS.post("/product-img/add", FD, {
-            onUploadProgress: (ProgressEvent) => {
-              const { loaded, total } = ProgressEvent;
-              const percent = Math.floor((loaded / total) * 100);
-              console.log("the percent=====================", percent);
-              if (percent % 10 === 0) {
-                progressRef.current[progressIdxRef.current].style.width =
-                  percent + "%";
-                progressRef.current[progressIdxRef.current].setAttribute(
-                  "percent-data",
-                  percent + "%"
-                );
-              }
-            },
-          }),
-          {
-            pending: "uploading",
-            success: "uploaded",
-            error: "failed to upload",
-          }
-        );
-        progressIdxRef.current++;
-        idsRef.current.push(res?.data?.id);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
+  const handleImages = (e: React.ChangeEvent<HTMLInputElement>) =>
+    handleImagesUpload(
+      e,
+      productId,
+      setImages,
+      progressRef,
+      progressIdxRef,
+      idsRef
+    );
 
   // image loading DOM
   const showOldImages = (
@@ -203,7 +175,7 @@ const UpdateProducts = () => {
     <div className="grid grid-cols-4 gap-1">
       {images?.map((image, idx) => (
         <div
-          key={image}
+          key={idx}
           className="flex flex-col border rounded-sm p-4 w-full"
           id={idsRef?.current[idx]}
         >
