@@ -1,19 +1,27 @@
-import { Table } from "flowbite-react";
+import { Alert, Table } from "flowbite-react";
 import { dummyArray } from "../../../utils/utils";
 import Skeleton from "react-loading-skeleton";
 import useGetData from "../../../hooks/use-get-data";
-import { AXIOS, CATEGORIES, PRODUCT, PRODUCTS } from "../../../utils/AXIOS";
+import { AXIOS, CATEGORIES, PRODUCT } from "../../../utils/AXIOS";
 import Btn from "../../../components/Btn";
 import { FiTrash } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 interface Props {
+  entireData: any[];
+  dataOrSearch: any[];
   limit: number;
   pages: number;
+  isLoading: boolean;
+  searchLoading: boolean;
+  isError: boolean;
+  search: string;
+  searchNotFound: boolean;
+  refetch: () => void;
 }
 interface DataType<T> {
   id: number;
@@ -39,31 +47,45 @@ interface DataType<T> {
 const removeUserRequest = async (id: string) =>
   await AXIOS.delete(`${PRODUCT}/${id}`);
 
-const ProductsList = ({ limit, pages }: Props) => {
+const ProductsList = ({ finalData }: { finalData: Props }) => {
   const productIdRef = useRef<number | null>(null);
 
-  const { data: categories } = useGetData(CATEGORIES, 999999, 1);
-  console.log(typeof categories?.data?.data[0]?.id);
-  const theCategory = (id) =>
-    categories?.data?.data?.find((cate) => cate?.id === +id);
-
-  console.log(theCategory(80));
-
-  const { data, isLoading, isError, refetch } = useGetData(
-    PRODUCTS,
+  const {
+    entireData,
+    dataOrSearch,
     limit,
-    pages
-  );
-  // id | category | title | description | price | discount | About | created_at | updated_at
-  const productsDATA = data?.data?.data;
-  console.log("products", productsDATA);
-  console.log(isError);
+    pages,
+    isLoading,
+    searchLoading,
+    isError,
+    search,
+    searchNotFound,
+    refetch,
+  } = finalData;
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  /** 
+   * I did not use the single data hook to not include it into the DOM, because it occur the following error
+   * Unexpected Application Error!
+     Rendered more hooks than during the previous render.
+     Error: Rendered more hooks than during the previous render.
+   */
+  const { data: categories } = useGetData(CATEGORIES, 99999999, 1);
+  const theCategory = (id: number) =>
+    categories?.data?.data?.find(
+      (cate: {
+        id?: number;
+        title?: string;
+        image?: string;
+        created_at?: string;
+        updated_at?: string;
+      }) => cate?.id === +id
+    );
 
-  const { mutate, mutateAsync } = useMutation({
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
+
+  const { mutateAsync } = useMutation({
     mutationKey: ["deleteproduct"],
     mutationFn: async (id: string) => await removeUserRequest(id),
   });
@@ -75,7 +97,7 @@ const ProductsList = ({ limit, pages }: Props) => {
         success: "deleted",
         error: "failed to delete",
       });
-      refetch();
+      // refetch();
     } catch (error) {
       console.log(error);
     }
@@ -85,19 +107,34 @@ const ProductsList = ({ limit, pages }: Props) => {
     <>
       <Table.Row>
         <Table.Cell colSpan={12} style={{ textAlign: "center" }}>
-          Products Not Found
+          {search !== "" && searchNotFound ? (
+            <Alert color="warning" rounded>
+              <span className="font-medium">Search alert!</span> The data you
+              are searching for is not found!.
+            </Alert>
+          ) : (
+            <Alert color="warning" rounded>
+              <span className="font-medium">Data alert!</span> No products
+              found!.
+            </Alert>
+          )}
         </Table.Cell>
       </Table.Row>
     </>
   );
 
   const productsListLoading = dummyArray(limit).map(() => (
-    <Table.Row>
+    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
       <Table.Cell colSpan={12} style={{ textAlign: "center" }}>
-        <Skeleton width="100%" />
+        {search !== "" && searchLoading ? (
+          "Searching..."
+        ) : (
+          <Skeleton width="100%" />
+        )}
       </Table.Cell>
     </Table.Row>
   ));
+
   const productsListError = (
     <Table.Row>
       <Table.Cell colSpan={12} style={{ textAlign: "center" }}>
@@ -106,8 +143,8 @@ const ProductsList = ({ limit, pages }: Props) => {
     </Table.Row>
   );
 
-  const productsList = productsDATA?.map(
-    (product: DataType<string | number>) => (
+  const productsList = dataOrSearch?.map(
+    (product: DataType<string | number>, idx) => (
       <Table.Row
         className="bg-white dark:border-gray-700 dark:bg-gray-800"
         key={product?.id}
@@ -125,10 +162,7 @@ const ProductsList = ({ limit, pages }: Props) => {
             />
           ))}
         </Table.Cell>
-        <Table.Cell>
-          {theCategory(product?.category)?.title}
-          {/* {<img src={product?.image} alt="" className="h-16" />} */}
-        </Table.Cell>
+        <Table.Cell>{theCategory(81)?.title}</Table.Cell>
         <Table.Cell>{product?.price}</Table.Cell>
         <Table.Cell>{product?.description}</Table.Cell>
         <Table.Cell className="flex items-center gap-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
@@ -159,13 +193,24 @@ const ProductsList = ({ limit, pages }: Props) => {
     )
   );
 
-  return isLoading
-    ? productsListLoading
-    : productsDATA?.length === 0 && !isLoading
-    ? productsListNotfound
-    : isError && !isLoading
-    ? productsListError
-    : productsList;
+  // the returned DOM
+  if (isLoading || (search !== "" && searchLoading)) return productsListLoading;
+  if (
+    (entireData?.length === 0 && !isLoading) ||
+    (search !== "" && searchNotFound)
+  )
+    return productsListNotfound;
+
+  if (!isLoading && isError) return productsListError;
+
+  return productsList;
 };
 
 export default ProductsList;
+
+// return isLoading || (search !== "" && searchLoading)
+// ? categoriesListLoading
+// : (entireData.length === 0 && !isLoading) ||
+//   (search !== "" && searchNotFound)
+// ? categoriesListNotfound
+// : categoriesList;

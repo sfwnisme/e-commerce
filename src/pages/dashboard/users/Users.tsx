@@ -1,35 +1,25 @@
 "use client";
-import { Button, Label, Select, Table } from "flowbite-react";
+import { Button, Label, Select, Table, TextInput } from "flowbite-react";
 import UsersList from "./UsersList";
 import { useEffect, useLayoutEffect, useState } from "react";
 import PagePagination from "../../../components/PagePagination";
-import { USERS } from "../../../utils/AXIOS";
-import Cookie from "cookie-universal";
+import { AXIOS, PRODUCT, USER, USERS } from "../../../utils/AXIOS";
 import { NavLink } from "react-router-dom";
+import useGetDataAndSearch from "../../../hooks/use-get-data-and-search";
 
 const Users = () => {
   const [limit, setLimit] = useState<number>(5);
   const [pages, setPages] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
 
-  const cookie = Cookie();
-  useLayoutEffect(() => {
-    if (pages > 1) {
-      // cookie.remove('users-pagination')
-      cookie.set("users-pagination", { limit: limit, pages: pages });
-    }
-  }, [limit, pages]);
-
-  useEffect(() => {
-    if (cookie.get("users-pagination")?.pages) {
-      setLimit(cookie.get("users-pagination")?.limit);
-      setPages(cookie.get("users-pagination")?.pages);
-    } else {
-      setPages(1);
-    }
-    console.log("checker");
-  }, []);
-
-  console.log(cookie.get("users-pagination")?.pages);
+  const finalData = useGetDataAndSearch(
+    USERS,
+    USER,
+    limit,
+    pages,
+    "name",
+    search
+  );
 
   return (
     <div className="container mx-auto px-4 mt-4">
@@ -42,6 +32,20 @@ const Users = () => {
         </NavLink>
       </div>
       <hr className="border-gray-500 mb-2" />
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="search" value="search" />
+        </div>
+        <TextInput
+          id="search"
+          type="text"
+          placeholder=""
+          required
+          shadow
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <div className="flex items-center gap-2 mb-2">
         <div className="max-w-fit">
           <div className="mb-2 block">
@@ -80,7 +84,7 @@ const Users = () => {
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            <UsersList limit={limit} pages={pages} />
+            <UsersList finalData={finalData} />
           </Table.Body>
         </Table>
       </div>

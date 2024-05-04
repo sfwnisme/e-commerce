@@ -1,18 +1,29 @@
-import { Button, Label, Select, Table } from "flowbite-react";
+import { Button, Label, Select, Table, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import PagePagination from "../../../components/PagePagination";
-import { PRODUCTS } from "../../../utils/AXIOS";
+import { PRODUCT, PRODUCTS } from "../../../utils/AXIOS";
 import ProductsList from "./ProductsList";
 import { NavLink } from "react-router-dom";
+import useGetDataAndSearch from "../../../hooks/use-get-data-and-search";
 
 const Products = () => {
   const [limit, setLimit] = useState(5);
   const [pages, setPages] = useState(1);
+  const [search, setSearch] = useState<string>("");
 
   const handleLimit = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLimit(parseInt(e?.target?.value));
     setPages(1); // reset the pages number to 1 to prevent empty values on changing the limit
   };
+
+  const finalData = useGetDataAndSearch(
+    PRODUCTS,
+    PRODUCT,
+    limit,
+    pages,
+    "title",
+    search
+  );
 
   return (
     <div className="container mx-auto px-4 mt-4">
@@ -25,6 +36,20 @@ const Products = () => {
         </NavLink>
       </div>
       <hr className="border-gray-500 mb-2" />
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor="search" value="search" />
+        </div>
+        <TextInput
+          id="search"
+          type="text"
+          placeholder=""
+          required
+          shadow
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <div className="flex items-center gap-2 mb-2">
         <div className="max-w-fit">
           <div className="mb-2 block">
@@ -59,7 +84,7 @@ const Products = () => {
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            <ProductsList limit={limit} pages={pages} />
+            <ProductsList finalData={finalData} />
             {/* <CategoriesList limit={limit} pages={pages} /> */}
           </Table.Body>
         </Table>

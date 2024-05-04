@@ -36,8 +36,6 @@ const AddProduct = () => {
   const [sendDummy, setSendDummy] = useState(false);
   const [images, setImages] = useState<FileData[]>([]);
   const [productId, setProductId] = useState("");
-  const navigate = useNavigate();
-  // const [percent, setPercent] = useState([]);
   const [dummyForm] = useState<Dummy>({
     category: null,
     title: "dummy",
@@ -52,26 +50,23 @@ const AddProduct = () => {
   const progressIdxRef = useRef(0);
   const idsRef = useRef<number[]>([]);
   const imageInputRef = useRef(null);
+  const navigate = useNavigate();
 
-  console.log(progressRef.current);
 
-  // current user
-  const { data, isLoading, isError } = useGetCurrentUser();
-  const currentUser = data?.data?.name;
-
-  console.log(currentUser);
+  // current user => using the current user for the loading process of the skeleton
+  const { isLoading } = useGetCurrentUser();
 
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors, isValid },
-    watch,
   } = useForm<AddProductInputs>({
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(AddProductYupSchema),
   });
+
 
   //=============================
   // edit the dummy data how has the {productId} saved from the {handleDummyForm} function
@@ -88,7 +83,7 @@ const AddProduct = () => {
         error: "could not create the product",
       });
       console.log(res);
-      // location.pathname = "/dashboard/products";
+      location.pathname = "/dashboard/products";
       navigate(`/dashboard/products`);
     } catch (error) {
       console.log(error);

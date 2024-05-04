@@ -1,14 +1,6 @@
 import React from "react";
 import { AXIOS } from "../utils/AXIOS";
 
-interface _ParamsTypes {
-  e: React.ChangeEvent<HTMLInputElement>;
-  productId: string;
-  setImages: (prev: Image) => React.Dispatch<React.SetStateAction<File[]>>;
-  progressRef: number[];
-  progressIdxRef: number;
-  idsRef: number[];
-}
 interface Image {
   url: string;
   name: string;

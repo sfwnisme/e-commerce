@@ -4,7 +4,7 @@
 
 in this project, I'm trying to challenge my adaptability and resilience by facing new frameworks and libraries for the first time and depending on the authorized documentation, Thus you will notice some bad practices in some components It's intentional because I'm trying to simulate the real world project process approach then I'll enhance the components and the code on the final stage.
 
-<hr/>
+---
 
 ## daily tasks
 
@@ -36,11 +36,22 @@ in this project, I'm trying to challenge my adaptability and resilience by facin
 - [x] bring the product data
 - [x] setup the images uploading progress bar
 
-#### #003 14/04/2024 - present
+#### #003 14/04/2024 - 28/04/2024
 
 - [x] forms skeleton
-- [ ] refine (AddProduct.tsx, UpdateProduct.tsx) components
-- [x] create reusable function for product images uploading
+- [x] refine (AddProduct.tsx, UpdateProduct.tsx) components
+- [x] create a reusable function for product images uploading
+
+#### #004 28/04/2024 - 04/05/2024
+
+NOTE: I encountered some bugs, if I added the `useGetSingleData(id: number)` hook into The Returned DOM it occurs the following error, so if I can't use any function containing a hook even if it doesn't return a hook
+`Unexpected Application Error!
+     Rendered more hooks than during the previous render.
+     Error: Rendered more hooks than during the previous render.`
+
+- [x] search function for users, categories, products
+      <!-- Route::post('/user/search', 'search'); -->
+- [x] create a custom search hook
 
 #### tips
 

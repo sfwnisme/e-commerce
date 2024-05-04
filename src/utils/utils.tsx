@@ -31,6 +31,7 @@ export const getTheRole = (roleNumber: string) => {
 export const dummyArray: (limit: number) => string[] = (limit) =>
   Array(limit).fill("");
 
+type ShortTextType = (text: string, limit: number) => string;
 /**
  * --------------------------------------------------
  * SHORT TEXT FUNCTION
@@ -43,7 +44,6 @@ export const dummyArray: (limit: number) => string[] = (limit) =>
  * @author sfwn.me
  * --------------------------------------------------
  */
-type ShortTextType = (text: string, limit: number) => string;
 export const shortTheText: ShortTextType = (text, limit) => {
   let result = text;
   if (text.length > limit) {
