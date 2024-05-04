@@ -44,10 +44,12 @@ in this project, I'm trying to challenge my adaptability and resilience by facin
 
 #### #004 28/04/2024 - 04/05/2024
 
-NOTE: I encountered some bugs, if I added the `useGetSingleData(id: number)` hook into The Returned DOM it occurs the following error, so if I can't use any function containing a hook even if it doesn't return a hook
+NOTE: I encountered some bugs, if I added the `useGetSingleData(id: number)` hook into The Returned DOM it occurs the following error.
 `Unexpected Application Error!
-     Rendered more hooks than during the previous render.
-     Error: Rendered more hooks than during the previous render.`
+Rendered more hooks than during the previous render.
+Error: Rendered more hooks than during the previous render.`
+so I can't use any function containing a hook even if it doesn't return a hook.
+For more information about the above error [read more](https://stackoverflow.com/questions/55622768/uncaught-invariant-violation-rendered-more-hooks-than-during-the-previous-rende)
 
 - [x] search function for users, categories, products
       <!-- Route::post('/user/search', 'search'); -->
