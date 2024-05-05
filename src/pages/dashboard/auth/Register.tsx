@@ -10,6 +10,7 @@ import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { ErrorResponseType, RegsiterInputs } from "../../../types/Types";
 import { registerYupSchema } from "../../../utils/yupSchema";
 import Btn from "../../../components/Btn";
+import { userRoutesByRole } from "../../../utils/utils";
 
 const Register = () => {
   const { mutateAsync, isPending } = useMutation({
@@ -36,7 +37,7 @@ const Register = () => {
       toast("You have successfully registered", {
         type: "success",
       });
-      window.location.pathname = "/dashboard";
+      window.location.pathname = userRoutesByRole(res?.data?.user?.role);
       console.log(res);
     } catch (error) {
       toast(ServerErrorResponse(error as ErrorResponseType), { type: "error" });

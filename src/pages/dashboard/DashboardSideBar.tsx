@@ -1,23 +1,28 @@
-"use client";
 import { Button, Sidebar } from "flowbite-react";
 import { HiArrowRight } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 import { NavLinks } from "./NavLinks";
 import React from "react";
+import { useGetCurrentUser } from "../../hooks/use-get-current-user";
 
 const DashboardSideBar = ({ toggle }: { toggle: boolean }) => {
-  const NavList: React.ReactNode[] | null = NavLinks?.map((link) => (
-    <NavLink to={link?.path} key={link?.name} end={true}>
-      {({ isActive }) => (
-        <Sidebar.Item
-          icon={link?.icon}
-          className={`${isActive ? "text-red-500" : ""}`}
-        >
-          {link?.name}
-        </Sidebar.Item>
-      )}
-    </NavLink>
-  ));
+  const { data } = useGetCurrentUser();
+  const userRole = data?.data?.role;
+
+  const NavList: React.ReactNode[] | null = NavLinks?.map((link) =>
+    link.roles.includes(userRole) ? (
+      <NavLink to={link?.path} key={link?.name} end={true}>
+        {({ isActive }) => (
+          <Sidebar.Item
+            icon={link?.icon}
+            className={`${isActive ? "text-red-500" : ""}`}
+          >
+            {link?.name}
+          </Sidebar.Item>
+        )}
+      </NavLink>
+    ) : null
+  );
 
   return (
     <Sidebar

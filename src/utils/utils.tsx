@@ -1,6 +1,6 @@
 type RolesType = "admin" | "writer" | "productManager" | "user";
 
-const roles: Record<RolesType, string> = {
+export const userRoles: Record<RolesType, string> = {
   admin: "1995",
   writer: "1996",
   productManager: "1999",
@@ -9,16 +9,16 @@ const roles: Record<RolesType, string> = {
 export const getTheRole = (roleNumber: string) => {
   let userRole: string;
   switch (roleNumber) {
-    case roles?.admin:
+    case userRoles?.admin:
       userRole = "admin";
       break;
-    case roles?.writer:
+    case userRoles?.writer:
       userRole = "writer";
       break;
-    case roles?.productManager:
+    case userRoles?.productManager:
       userRole = "productManager";
       break;
-    case roles?.user:
+    case userRoles?.user:
       userRole = "user";
       break;
     default:
@@ -26,6 +26,21 @@ export const getTheRole = (roleNumber: string) => {
   }
 
   return userRole;
+};
+
+// get the router of the user-role page like (admin => users, productManager => products)
+export const userRoutesByRole = (theRole: string) => {
+  let theRoute = "/";
+  if (userRoles?.admin === theRole) {
+    theRoute = "/dashboard/users";
+  } else if (userRoles?.writer === theRole) {
+    theRoute = "/dashboard/writer";
+  } else if (userRoles?.productManager === theRole) {
+    theRoute = "/dashboard/products";
+  } else {
+    theRoute = "/";
+  }
+  return theRoute;
 };
 
 export const dummyArray: (limit: number) => string[] = (limit) =>

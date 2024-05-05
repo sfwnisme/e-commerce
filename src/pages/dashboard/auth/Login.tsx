@@ -1,6 +1,6 @@
 "use client";
 
-import {  Label, TextInput } from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AXIOS, LOGIN } from "../../../utils/AXIOS";
 import { setCookie } from "../../../utils/COOKIES";
@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { ErrorResponseType, LoginInputs } from "../../../types/Types";
 import { loginYupSchema } from "../../../utils/yupSchema";
 import Btn from "../../../components/Btn";
+import { userRoutesByRole } from "../../../utils/utils";
 
 const Login = () => {
   // react query
@@ -36,7 +37,8 @@ const Login = () => {
       const res = await mutateAsync(data);
       setCookie("TOKEN", res?.data?.token);
       setCookie("ROLE", res?.data?.user?.role);
-      window.location.pathname = "/dashboard";
+
+      window.location.pathname = userRoutesByRole(res?.data?.user?.role);
       toast("You are logged in successfully", {
         type: "success",
       });

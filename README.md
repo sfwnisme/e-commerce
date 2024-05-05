@@ -4,6 +4,8 @@
 
 in this project, I'm trying to challenge my adaptability and resilience by facing new frameworks and libraries for the first time and depending on the authorized documentation, Thus you will notice some bad practices in some components It's intentional because I'm trying to simulate the real world project process approach then I'll enhance the components and the code on the final stage.
 
+**BIG NOTE**: this project needs more refactoring after finishing its development
+
 ---
 
 ## daily tasks
@@ -52,8 +54,12 @@ so I can't use any function containing a hook even if it doesn't return a hook.
 For more information about the above error [read more](https://stackoverflow.com/questions/55622768/uncaught-invariant-violation-rendered-more-hooks-than-during-the-previous-rende)
 
 - [x] search function for users, categories, products
-      <!-- Route::post('/user/search', 'search'); -->
 - [x] create a custom search hook
+
+#### #005 05/04/2024
+
+- [x] protected routes
+- [x] user-based routes
 
 #### tips
 
