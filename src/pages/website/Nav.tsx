@@ -1,6 +1,7 @@
-import { Navbar } from "flowbite-react";
+import { Navbar, TextInput } from "flowbite-react";
 import { NavLink } from "react-router-dom";
 import UserDropDown from "../../components/UserDropDown";
+import NavCategories from "./website categories/NavCategories";
 
 const Nav = () => {
   return (
@@ -14,11 +15,12 @@ const Nav = () => {
           />
         </Navbar.Brand>
       </NavLink>
-      <Navbar.Collapse>
-        <NavLink to="/">
-          <Navbar.Link active>Home</Navbar.Link>
-        </NavLink>
-      </Navbar.Collapse>
+      <div>
+        <TextInput id="search" type="search" placeholder="search..." />
+        <div className="flex items-center gap-6 mt-4">
+          <NavCategories />
+        </div>
+      </div>
       <UserDropDown />
     </Navbar>
   );

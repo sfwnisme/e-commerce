@@ -6,6 +6,15 @@ in this project, I'm trying to challenge my adaptability and resilience by facin
 
 **BIG NOTE**: this project needs more refactoring after finishing its development
 
+- [ ] react query in a single file (get data, post data, update data, delete data).
+  - [ ] register
+  - [ ] login
+  - [ ] user
+  - [ ] categories
+  - [ ] products
+- [ ] rewrite the custom react hooks in the common way that devs write.
+- [ ] use shared components for duplicated components and features.
+
 ---
 
 ## daily tasks
@@ -60,6 +69,8 @@ For more information about the above error [read more](https://stackoverflow.com
 
 - [x] protected routes
 - [x] user-based routes
+
+#### #006 06/04/2024 - present
 
 #### tips
 

@@ -81,6 +81,8 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
       }) => cate?.id === +id
     );
 
+  console.log(theCategory(639)?.title);
+
   // useEffect(() => {
   //   refetch();
   // }, []);
@@ -97,7 +99,7 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
         success: "deleted",
         error: "failed to delete",
       });
-      // refetch();
+      refetch();
     } catch (error) {
       console.log(error);
     }
@@ -162,7 +164,7 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
             />
           ))}
         </Table.Cell>
-        <Table.Cell>{theCategory(81)?.title}</Table.Cell>
+        <Table.Cell>{theCategory(product?.category)?.title}</Table.Cell>
         <Table.Cell>{product?.price}</Table.Cell>
         <Table.Cell>{product?.description}</Table.Cell>
         <Table.Cell className="flex items-center gap-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">

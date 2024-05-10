@@ -36,42 +36,46 @@ const Products = () => {
         </NavLink>
       </div>
       <hr className="border-gray-500 mb-2" />
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="search" value="search" />
-        </div>
+      <div className="mb-4">
         <TextInput
           id="search"
           type="text"
-          placeholder=""
+          placeholder="search..."
           required
           shadow
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <div className="flex items-center gap-2 mb-2">
-        <div className="max-w-fit">
-          <div className="mb-2 block">
-            <Label htmlFor="products" value="" />
+      {search?.length === 0 ? (
+        <div className="flex items-center gap-2 mb-2">
+          <div className="max-w-fit">
+            <div className="mb-2 block">
+              <Label htmlFor="products" value="" />
+            </div>
+            <Select
+              id="products"
+              onChange={handleLimit}
+              sizing="sm"
+              color="gray"
+            >
+              <option selected value={5}>
+                5
+              </option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </Select>
           </div>
-          <Select id="products" onChange={handleLimit} sizing="sm" color="gray">
-            <option selected value={5}>
-              5
-            </option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-          </Select>
+          <PagePagination
+            endpoint={PRODUCTS}
+            limit={limit}
+            pages={pages}
+            setLimit={setLimit}
+            setPages={setPages}
+          />
         </div>
-        <PagePagination
-          endpoint={PRODUCTS}
-          limit={limit}
-          pages={pages}
-          setLimit={setLimit}
-          setPages={setPages}
-        />
-      </div>
+      ) : null}
       <div className="overflow-x-auto border-2">
         <Table hoverable striped>
           <Table.Head>

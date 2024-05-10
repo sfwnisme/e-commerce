@@ -8,7 +8,6 @@ export const useGetCurrentUser = () => {
     queryKey: [USER, "currentUser"],
     queryFn: () => fetching(USER),
   });
-  console.log(query.data?.data.role)
 
   return { ...query };
 };

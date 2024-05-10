@@ -29,3 +29,22 @@ body {
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
 }
+
+[data-testid="flowbite-card"] {
+  /* height: 600px; */
+}
+
+[data-testid="flowbite-card"] img {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+[data-testid="carousel"] span {
+  background-color: rgb(167, 167, 167);
+}
+
+[data-testid="carousel"] span svg {
+  color: white;
+}

@@ -23,6 +23,11 @@ import User from "./pages/dashboard/users/User.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import PrivateRoutes from "./pages/PrivateRoutes.tsx";
 import { userRoles } from "./utils/utils.tsx";
+import Hero from "./pages/website/Hero.tsx";
+import LandingPage from "./pages/website/LandingPage.tsx";
+import WebsiteProducts from "./pages/website/website products/WebsiteProducts.tsx";
+import WebsiteCategories from "./pages/website/website categories/WebsiteCategories.tsx";
+import WebsiteProductPage from "./pages/website/website products/WebsiteProductPage.tsx";
 
 // const router = createBrowserRouter([
 //   {
@@ -108,6 +113,10 @@ const router = createBrowserRouter([
         element: <Home />,
         children: [
           {
+            index: true,
+            element: <LandingPage />,
+          },
+          {
             path: "/register",
             element: <Register />,
           },
@@ -116,9 +125,13 @@ const router = createBrowserRouter([
             element: <Login />,
           },
           {
-            path: "user",
+            path: "/user",
             element: <User />,
           },
+          { path: "products", element: <WebsiteProducts /> },
+          { path: "products/:id", element: <WebsiteProductPage /> },
+          { path: "categories/:id", element: <WebsiteProducts /> },
+          { path: "categories", element: <WebsiteCategories /> },
         ],
       },
       {
