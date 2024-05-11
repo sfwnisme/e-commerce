@@ -28,6 +28,7 @@ import LandingPage from "./pages/website/LandingPage.tsx";
 import WebsiteProducts from "./pages/website/website products/WebsiteProducts.tsx";
 import WebsiteCategories from "./pages/website/website categories/WebsiteCategories.tsx";
 import WebsiteProductPage from "./pages/website/website products/WebsiteProductPage.tsx";
+import { PRODUCTS } from "./utils/AXIOS.tsx";
 
 // const router = createBrowserRouter([
 //   {
@@ -128,9 +129,15 @@ const router = createBrowserRouter([
             path: "/user",
             element: <User />,
           },
-          { path: "products", element: <WebsiteProducts /> },
+          {
+            path: "products",
+            element: <WebsiteProducts productsType={PRODUCTS} />,
+          },
           { path: "products/:id", element: <WebsiteProductPage /> },
-          { path: "categories/:id", element: <WebsiteProducts /> },
+          {
+            path: "categories/:id",
+            element: <WebsiteProducts productsType={PRODUCTS} />,
+          },
           { path: "categories", element: <WebsiteCategories /> },
         ],
       },

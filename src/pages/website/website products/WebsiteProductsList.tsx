@@ -5,23 +5,34 @@ import { dummyArray } from "../../../utils/utils";
 import ProductCardSkeleton from "../../../components/skeleton/ProductCardSkeleton";
 import { useParams } from "react-router-dom";
 import { Alert } from "flowbite-react";
+import { GiConsoleController } from "react-icons/gi";
 
 interface IProduct {
   id: number;
   images: { image: string }[];
   title: string;
+  description?: string;
   price: number;
   category: number;
+  rating?: number;
+  ratings_number?: number;
 }
 
-const WebsiteProductsList = () => {
-  const fetching = async () => await AXIOS.get(PRODUCTS);
+const WebsiteProductsList = ({ productsType }: { productsType: string }) => {
+  location?.pathname?.split("/")[1] === "categories" ? PRODUCTS : productsType;
+  const fetching = async () => await AXIOS.get(productsType);
   const { data, isLoading, isError } = useQuery({
-    queryKey: [PRODUCTS],
+    queryKey: [productsType],
     queryFn: () => fetching(),
   });
-
   const { id } = useParams<string>();
+
+  const reducing = data?.data?.reduce(
+    // (total, current) => (current?.id === id ? [...total, current] : total),
+    (total, current) => (current?.id === +id ? total?.push(current) : total),
+    []
+  );
+  console.log("reducer value", reducing);
 
   const filterProductsByCategory = data?.data?.filter(
     (product: IProduct) => product?.category === +id!
@@ -40,7 +51,10 @@ const WebsiteProductsList = () => {
       id={product?.id}
       image={product?.images[0]?.image}
       title={product?.title}
+      description={product?.description}
       price={product?.price}
+      rating={product?.rating}
+      ratings_number={product?.ratings_number}
     />
   ));
 

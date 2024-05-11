@@ -1,14 +1,48 @@
 import { Badge, Button } from "flowbite-react";
-import { shortTheText } from "../utils/utils";
+import { dummyArray, shortTheText } from "../utils/utils";
 import { NavLink } from "react-router-dom";
+import { AiFillStar } from "react-icons/ai";
+import { FiStar } from "react-icons/fi";
+import { IoStar, IoStarOutline } from "react-icons/io5";
+import { FaFontAwesome } from "react-icons/fa";
 interface IProduct {
-  id: number;
-  image: string;
+  id?: number;
+  image?: string;
   title: string;
-  price: number;
+  price?: number;
+  rating?: number;
+  ratings_number?: number;
 }
 const ProductCard = (props: IProduct) => {
-  const { id, image, title, price } = props;
+  const { id, image, title, description, price, rating, ratings_number } =
+    props;
+
+  const ratingStars = () => {
+    const highestStars = 5; // initial highest rating number
+    const positiveStars = Math.floor(Number(rating)); // the current rating number
+    const negativeStars = Math.abs(
+      Math.floor(Number(positiveStars) - Number(highestStars))
+    ); // the number of unrated star positions
+
+    const positiveStarsDOM = dummyArray(positiveStars)?.map((_, idx) => (
+      <IoStar color="gold" key={idx} />
+    ));
+    const negativeStarsDOM = dummyArray(negativeStars)?.map((_, idx) => (
+      <IoStarOutline color="black" key={idx} />
+    ));
+
+    return (
+      <div className="flex items-center">
+        {positiveStarsDOM} {negativeStarsDOM}
+        <Badge color="blue" className="ml-2 inline">
+          {rating}
+        </Badge>
+        <small className="ml-1">({ratings_number} ratings)</small>
+      </div>
+    );
+  };
+
+  ratingStars();
 
   const showTheProductCard = (
     <div
@@ -26,12 +60,10 @@ const ProductCard = (props: IProduct) => {
         <NavLink to={`/products/${id}`} className="self-start max-sm:text-sm">
           {shortTheText(title, 40)}
         </NavLink>
-        <h3>
-          *****
-          <Badge color="blue" className="ml-2 inline">
-            5.0
-          </Badge>
-        </h3>
+        <small className="text-gray-400 font-light">
+          {shortTheText(description, 50)}
+        </small>
+        <h3>{ratingStars()}</h3>
         <div className="w-full self-end">
           <h3 className="mb-2 font-medium">
             {price}

@@ -51,6 +51,7 @@ const WebsiteProductPage = () => {
             <h3 className="text-xl font-medium text-blue-800 mb-8">
               {theProduct?.price} <sup>SAR</sup>
             </h3>
+            <p className="description mt-4">{theProduct?.About}</p>
           </div>
           <div className="price w-full">
             <Button color="gray" outline className="w-full">

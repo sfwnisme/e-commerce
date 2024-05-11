@@ -5,7 +5,7 @@ import NavCategories from "./website categories/NavCategories";
 
 const Nav = () => {
   return (
-    <Navbar fluid className="border">
+    <Navbar fluid className="border z-10 fixed top-0 left-0 w-full">
       <NavLink to="/">
         <Navbar.Brand>
           <img

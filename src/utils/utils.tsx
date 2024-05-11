@@ -55,11 +55,11 @@ type ShortTextType = (text: string, limit: number) => string;
  * @param text - the text you wanna limit its length
  * @param limit - the length you wanna limit
  * @returns string - the shorted text
- * @type {(text: string, limit: number) => string}
+ * @types {(text: string, limit: number) => string}
  * @author sfwn.me
  * --------------------------------------------------
  */
-export const shortTheText: ShortTextType = (text, limit) => {
+export const shortTheText: ShortTextType = (text: string, limit: number) => {
   let result = text;
   if (text.length > limit) {
     return (result = text.substring(0, limit) + "...");
