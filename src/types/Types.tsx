@@ -70,7 +70,7 @@ export type AddCategoryInputs = {
  * -----------------------------
  */
 export interface AddProductInputs {
-  id?: number ;
+  id?: number;
   category: number | null;
   title: string;
   description: string;

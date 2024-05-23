@@ -1,22 +1,27 @@
 "use client";
 import { Label, TextInput } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AXIOS, REGISTER } from "../../../utils/AXIOS";
+import { REGISTER } from "../../../utils/AXIOS";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { setCookie } from "../../../utils/COOKIES";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
-import { ErrorResponseType, RegsiterInputs } from "../../../types/Types";
+import { ErrorResponseType } from "../../../types/Types";
 import { registerYupSchema } from "../../../utils/yupSchema";
 import Btn from "../../../components/Btn";
 import { userRoutesByRole } from "../../../utils/utils";
+import { IRegister, registerationQuery } from "../../../queries/Queries";
 
 const Register = () => {
+  // const { mutateAsync, isPending } = useMutation({
+  //   mutationKey: [REGISTER || "register"],
+  //   mutationFn: async (data: RegsiterInputs) =>
+  //     AXIOS.post(`/${REGISTER}`, data),
+  // });
   const { mutateAsync, isPending } = useMutation({
     mutationKey: [REGISTER || "register"],
-    mutationFn: async (data: RegsiterInputs) =>
-      AXIOS.post(`/${REGISTER}`, data),
+    mutationFn: (data: IRegister) => registerationQuery(data),
   });
 
   const {
@@ -24,13 +29,13 @@ const Register = () => {
     handleSubmit,
     formState: { errors, isValid },
     getValues,
-  } = useForm<RegsiterInputs>({
+  } = useForm<IRegister>({
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(registerYupSchema),
   });
 
-  const onSubmit: SubmitHandler<RegsiterInputs> = async (data) => {
+  const onSubmit: SubmitHandler<IRegister> = async (data) => {
     try {
       const res = await mutateAsync(data);
       setCookie("TOKEN", res?.data?.token);

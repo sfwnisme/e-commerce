@@ -9,13 +9,23 @@ interface IProduct {
   id?: number;
   image?: string;
   title: string;
+  description?: string;
   price?: number;
+  discount?: number;
   rating?: number;
   ratings_number?: number;
 }
 const ProductCard = (props: IProduct) => {
-  const { id, image, title, description, price, rating, ratings_number } =
-    props;
+  const {
+    id,
+    image,
+    title,
+    description,
+    price,
+    discount,
+    rating,
+    ratings_number,
+  } = props;
 
   const ratingStars = () => {
     const highestStars = 5; // initial highest rating number
@@ -57,7 +67,10 @@ const ProductCard = (props: IProduct) => {
         className="self-start w-full h-auto aspect-square object-contain"
       />
       <div className="grid gap-2 w-full self-end h-full">
-        <NavLink to={`/products/${id}`} className="self-start max-sm:text-sm">
+        <NavLink
+          to={`/products/${id}`}
+          className="self-start max-sm:text-sm hover:text-blue-500 duration-75"
+        >
           {shortTheText(title, 40)}
         </NavLink>
         <small className="text-gray-400 font-light">
@@ -67,6 +80,10 @@ const ProductCard = (props: IProduct) => {
         <div className="w-full self-end">
           <h3 className="mb-2 font-medium">
             {price}
+            <sup className="ml-1">SAR</sup>
+          </h3>
+          <h3 className="mb-2 font-medium">
+            {discount}
             <sup className="ml-1">SAR</sup>
           </h3>
           <Button color="gray" outline size="sm" className="w-full">

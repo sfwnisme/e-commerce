@@ -1,5 +1,4 @@
-import useGetData from "../../../hooks/use-get-data";
-import { AXIOS, PRODUCT, USER, USERS } from "../../../utils/AXIOS";
+import { AXIOS, USER } from "../../../utils/AXIOS";
 import { Table } from "flowbite-react";
 import { dummyArray, getTheRole } from "../../../utils/utils";
 import { AiFillEdit } from "react-icons/ai";
@@ -11,19 +10,19 @@ import {
   ErrorResponseType,
   handleRemoveUserType,
 } from "../../../types/Types";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import Btn from "../../../components/Btn";
 import { FiTrash } from "react-icons/fi";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import useSWR from "swr";
+import Skeleton from "react-loading-skeleton";
+import { IUser, userDeleteQuery } from "../../../queries/Queries";
 
-interface Props {
-  entireData: any[];
-  dataOrSearch: any[];
+interface IProps {
+  entireData: IUser[];
+  dataOrSearch: IUser[];
   limit: number;
-  pages: number;
+  pages?: number;
   isLoading: boolean;
   searchLoading: boolean;
   isError: boolean;
@@ -32,25 +31,17 @@ interface Props {
   refetch: () => void;
 }
 
-// const removeUserRequest = async (id) => AXIOS.delete(`${USERS}/${id}`);
 const removeUserRequest: ApiIdRequest = async (id) =>
   await AXIOS.delete(`${USER}/${id}`);
 
-const UsersList = ({ finalData }: { finalData: Props }) => {
-  const [userId, setUserId] = useState<number>();
-  // const [search, setSearch] = useState<string>("");
-  // const [searchData, setSearchData] = useState<string[]>([]);
+const UsersList = ({ finalData }: { finalData: IProps }) => {
+  console.log(finalData?.entireData);
   const userIdRef = useRef<number | null>(null);
 
-  // // users request from the custom hook
-  // const { data, isLoading, refetch } = useGetData(USERS, limit, pages);
-  // const usersDATA = data?.data?.data;
-  // const searchOrData = search.length > 0 ? searchData : usersDATA; // display searched data onSearch
   const {
     entireData,
     dataOrSearch,
     limit,
-    pages,
     isLoading,
     searchLoading,
     isError,
@@ -58,16 +49,13 @@ const UsersList = ({ finalData }: { finalData: Props }) => {
     searchNotFound,
     refetch,
   } = finalData;
-  // remove user
+
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["deleteUser"],
-    mutationFn: async (id: string) => await removeUserRequest(id),
+    mutationFn: (id: string) => userDeleteQuery(id),
   });
-
   const handleRemoveUser: handleRemoveUserType = async (data) => {
     const { id, name } = data;
-    console.log("is it number", id);
-    setUserId(id);
     userIdRef.current = Number(id);
     try {
       const res = await mutateAsync(`${id}`);

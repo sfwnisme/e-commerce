@@ -72,6 +72,10 @@ For more information about the above error [read more](https://stackoverflow.com
 
 #### #006 06/04/2024 - present
 
+- [ ] refine the react query best practice
+- [ ] refine toast messages for the correct status and display normal messages for the rest
+- [ ]
+
 #### tips
 
 - you can use those libs to handle the file upload progress bar ([link1](https://shorturl.at/PT679), [files-ui](https://www.files-ui.com/usage))

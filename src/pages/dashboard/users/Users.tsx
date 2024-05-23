@@ -1,9 +1,9 @@
 "use client";
 import { Button, Label, Select, Table, TextInput } from "flowbite-react";
 import UsersList from "./UsersList";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import PagePagination from "../../../components/PagePagination";
-import { AXIOS, PRODUCT, USER, USERS } from "../../../utils/AXIOS";
+import { USER, USERS } from "../../../utils/AXIOS";
 import { NavLink } from "react-router-dom";
 import useGetDataAndSearch from "../../../hooks/use-get-data-and-search";
 

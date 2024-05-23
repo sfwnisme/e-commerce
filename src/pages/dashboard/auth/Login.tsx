@@ -1,37 +1,39 @@
-"use client";
-
 import { Label, TextInput } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AXIOS, LOGIN } from "../../../utils/AXIOS";
+import { LOGIN } from "../../../utils/AXIOS";
 import { setCookie } from "../../../utils/COOKIES";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { ErrorResponseType, LoginInputs } from "../../../types/Types";
+import { ErrorResponseType } from "../../../types/Types";
 import { loginYupSchema } from "../../../utils/yupSchema";
 import Btn from "../../../components/Btn";
 import { userRoutesByRole } from "../../../utils/utils";
+import { ILogin, loginQuery } from "../../../queries/Queries";
 
 const Login = () => {
   // react query
+  // const { mutateAsync, isPending } = useMutation({
+  //   mutationKey: [LOGIN || "login"],
+  //   mutationFn: (data: LoginInputs) => AXIOS.post(`${LOGIN}`, data),
+  // });
   const { mutateAsync, isPending } = useMutation({
     mutationKey: [LOGIN || "login"],
-    mutationFn: (data: LoginInputs) => AXIOS.post(`${LOGIN}`, data),
+    mutationFn: (data: ILogin) => loginQuery(data),
   });
-
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
     getValues,
-  } = useForm<LoginInputs>({
+  } = useForm<ILogin>({
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(loginYupSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+  const onSubmit: SubmitHandler<ILogin> = async (data) => {
     console.log(data);
     try {
       const res = await mutateAsync(data);
@@ -39,14 +41,10 @@ const Login = () => {
       setCookie("ROLE", res?.data?.user?.role);
 
       window.location.pathname = userRoutesByRole(res?.data?.user?.role);
-      toast("You are logged in successfully", {
-        type: "success",
-      });
+      toast.success("You are logged in successfully");
       console.log("user data", res);
     } catch (error) {
-      toast(ServerErrorResponse(error as ErrorResponseType), {
-        type: "error",
-      });
+      toast.error(ServerErrorResponse(error as ErrorResponseType));
       console.log(error);
     }
   };

@@ -5,7 +5,6 @@ import { dummyArray } from "../../../utils/utils";
 import ProductCardSkeleton from "../../../components/skeleton/ProductCardSkeleton";
 import { useParams } from "react-router-dom";
 import { Alert } from "flowbite-react";
-import { GiConsoleController } from "react-icons/gi";
 
 interface IProduct {
   id: number;
@@ -13,7 +12,8 @@ interface IProduct {
   title: string;
   description?: string;
   price: number;
-  category: number;
+  discount?: number;
+  category?: number;
   rating?: number;
   ratings_number?: number;
 }
@@ -26,13 +26,6 @@ const WebsiteProductsList = ({ productsType }: { productsType: string }) => {
     queryFn: () => fetching(),
   });
   const { id } = useParams<string>();
-
-  const reducing = data?.data?.reduce(
-    // (total, current) => (current?.id === id ? [...total, current] : total),
-    (total, current) => (current?.id === +id ? total?.push(current) : total),
-    []
-  );
-  console.log("reducer value", reducing);
 
   const filterProductsByCategory = data?.data?.filter(
     (product: IProduct) => product?.category === +id!
@@ -53,6 +46,7 @@ const WebsiteProductsList = ({ productsType }: { productsType: string }) => {
       title={product?.title}
       description={product?.description}
       price={product?.price}
+      discount={product?.discount}
       rating={product?.rating}
       ratings_number={product?.ratings_number}
     />

@@ -1,6 +1,4 @@
-import useGetData from "../../hooks/use-get-data";
 import {
-  CATEGORIES,
   PRODUCTS,
   PRODUCTS_LATEST,
   PRODUCTS_LATEST_SALE,
