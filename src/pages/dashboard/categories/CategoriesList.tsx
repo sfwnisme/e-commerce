@@ -11,33 +11,29 @@ import { toast } from "react-toastify";
 import { useRef } from "react";
 import Skeleton from "react-loading-skeleton";
 import { dummyArray } from "../../../utils/utils";
-import { ICategorie } from "../../../queries/Queries";
+import { ICategory } from "../../../queries/Queries";
 
-interface Props {
-  dataOrSearch: ICategorie[];
-  limit: number;
-  pages: number;
-  isLoading: boolean;
-  searchLoading: boolean;
-  isError: boolean;
-  search: string;
-  searchNotFound: boolean;
-  dataNotFound: boolean;
-  refetch: () => void;
+interface IProps {
+  finalData: {
+    dataOrSearch: ICategory[];
+    limit: number;
+    pages: number;
+    isLoading: boolean;
+    searchLoading: boolean;
+    isError: boolean;
+    search: string;
+    searchNotFound: boolean;
+    dataNotFound: boolean;
+    refetch: () => void;
+  };
 }
-type DataType = {
-  id?: number | undefined;
-  title?: string | undefined;
-  image?: string | undefined;
-};
 
-const CategoriesList = ({ finalData }: { finalData: Props }) => {
+const CategoriesList: React.FC<IProps> = ({ finalData }) => {
   const categoryIdRef = useRef<number | null>(null); // get exact deleted element to handle its loading
 
   const {
     dataOrSearch,
     limit,
-    pages,
     isLoading,
     searchLoading,
     isError,
@@ -61,7 +57,7 @@ const CategoriesList = ({ finalData }: { finalData: Props }) => {
       await AXIOS.delete(`${CATEGORY}/${id}`),
   });
 
-  const handleRemoveCategory: (data: DataType) => Promise<void> = async (
+  const handleRemoveCategory: (data: ICategory) => Promise<void> = async (
     data
   ) => {
     categoryIdRef.current = Number(data?.id);
@@ -118,7 +114,7 @@ const CategoriesList = ({ finalData }: { finalData: Props }) => {
     </Table.Row>
   );
 
-  const categoriesList = dataOrSearch?.map((category: ICategorie) => (
+  const categoriesList = dataOrSearch?.map((category: ICategory) => (
     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
       <Table.Cell>{category?.id}</Table.Cell>
       <Table.Cell>{category?.title}</Table.Cell>

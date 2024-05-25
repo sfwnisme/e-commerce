@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { AXIOS } from "../utils/AXIOS";
 
-const useGetSingleData = (endpoint: string, id: number) => {
-  const fetching = async (endpoint: string, id: number) =>
+const useGetSingleData = (endpoint: string, id: string | undefined) => {
+  const fetching = async (endpoint: string, id: string | undefined) =>
     await AXIOS.get(`${endpoint}/${id}`);
 
   const query = useQuery({

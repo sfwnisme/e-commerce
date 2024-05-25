@@ -52,7 +52,6 @@ const AddProduct = () => {
   const imageInputRef = useRef(null);
   const navigate = useNavigate();
 
-
   // current user => using the current user for the loading process of the skeleton
   const { isLoading } = useGetCurrentUser();
 
@@ -66,7 +65,6 @@ const AddProduct = () => {
     reValidateMode: "onChange",
     resolver: yupResolver(AddProductYupSchema),
   });
-
 
   //=============================
   // edit the dummy data how has the {productId} saved from the {handleDummyForm} function

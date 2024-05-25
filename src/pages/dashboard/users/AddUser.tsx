@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AddUserInputs, ErrorResponseType } from "../../../types/Types";
+import { ErrorResponseType } from "../../../types/Types";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { useMutation } from "@tanstack/react-query";
 import { AXIOS, USER } from "../../../utils/AXIOS";
@@ -11,14 +11,16 @@ import UsersRoleOption from "../../../components/UsersRoleOption";
 import Btn from "../../../components/Btn";
 import { useGetCurrentUser } from "../../../hooks/use-get-current-user";
 import Skeleton from "react-loading-skeleton";
+import { IUserRegister } from "../../../queries/Queries";
 
 const AddUser = () => {
   // mutation
   const { mutateAsync, isPending } = useMutation({
     mutationKey: [`add${USER}` || "addUser"],
-    mutationFn: (data: AddUserInputs) => AXIOS.post(`${USER}/add`, data),
+    mutationFn: (data: IUserRegister) => AXIOS.post(`${USER}/add`, data),
   });
 
+  // importing this hook to display the skeleton style only, non other affect reason
   const { isLoading } = useGetCurrentUser();
 
   const {
@@ -26,15 +28,13 @@ const AddUser = () => {
     handleSubmit,
     getValues,
     formState: { errors, isValid },
-  } = useForm<AddUserInputs>({
+  } = useForm<IUserRegister>({
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(AddUserYupSchema),
   });
 
-  console.log("validation-------------", isValid);
-
-  const onSubmit: SubmitHandler<AddUserInputs> = async (data) => {
+  const onSubmit: SubmitHandler<IUserRegister> = async (data) => {
     try {
       const res = await mutateAsync(data);
       console.log("user has been added successfully", res);

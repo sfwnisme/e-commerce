@@ -60,7 +60,7 @@ export const AddCategoryYupSchema = yup.object({
     .required("title is required")
     .min(2, "title should be at least 2 characters")
     .max(100, "title should be less than 100 characters"),
-  image: yup.mixed().required("image is required"),
+  image: yup.mixed<FileList>().required("image is required"),
 });
 
 /**

@@ -8,24 +8,21 @@ import { AXIOS, CATEGORY } from "../../../utils/AXIOS";
 import { ErrorResponseType } from "../../../types/Types";
 import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import { useGetCurrentUser } from "../../../hooks/use-get-current-user";
+import { ICategoryAdd } from "../../../queries/Queries";
 
-interface Inputs {
-  title: string;
-  image?: File;
-}
 const AddCategory = () => {
-  const [image, setImage] = useState<string | null>(null);
+  // const [setImage] = useState<File | null>(null);
+  const FD = new FormData();
   const navigate = useNavigate();
 
   const { isLoading } = useGetCurrentUser();
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["AddCategory"],
-    mutationFn: async (data: Inputs) =>
+    mutationFn: async (data: ICategoryAdd) =>
       await AXIOS.post(`${CATEGORY}/add`, data),
   });
 
@@ -33,20 +30,16 @@ const AddCategory = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    watch,
-  } = useForm<Inputs>({
+  } = useForm<ICategoryAdd>({
     mode: "onChange",
     reValidateMode: "onChange",
-    resolver: yupResolver(AddCategoryYupSchema),
+    resolver: yupResolver<ICategoryAdd>(AddCategoryYupSchema),
   });
 
-  console.log("watcher", watch());
-  const FD = new FormData();
-
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<ICategoryAdd> = async (data) => {
     console.log("|||||||||||||||||||||", data?.image?.[0]);
     if (data?.image) {
-      const imageFile = data?.image?.[0] as File;
+      const imageFile = data?.image?.[0];
       FD.append("image", imageFile);
     }
     FD.append("title", data.title);
@@ -100,26 +93,24 @@ const AddCategory = () => {
         <div className="mb-2 block">
           <Label htmlFor="title" value="Title" />
         </div>
-        <TextInput
-          id="title"
-          type="text"
-          required
-          shadow
-          {...register("title")}
-        />
+        <TextInput id="title" type="text" shadow {...register("title")} />
       </div>
+      <small className="text-red-600">{errors?.title?.message}</small>
+
       <div>
         <div className="mb-2 block">
           <Label htmlFor="image" value="Upload image" />
         </div>
         <FileInput
           id="image"
-          {...register("image", {
-            onChange: (e) => setImage(e?.target?.files[0]),
-          })}
-          onChange={(e) => setImage(e?.target?.files[0])}
+          {...register("image")}
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          // setImage(e.target.files[0])
+          // }
         />
       </div>
+      {/* <small className="text-red-600">{errors?.category?.message}</small> */}
+
       <Btn
         text="Add"
         color="blue"

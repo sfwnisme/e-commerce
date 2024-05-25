@@ -72,7 +72,25 @@ For more information about the above error [read more](https://stackoverflow.com
 
 #### #006 06/04/2024 - present
 
-- [ ] refine the react query best practice
+- [ ] refine the react query best practice and typescript types
+  users
+  - [x] users
+  - [x] add user
+  - [x] update user
+  - [x] remove user
+
+  categories
+  - [x] categories
+  - [ ] add category
+  - [ ] update category
+  - [ ] remove category
+
+  products
+  - [ ] products
+  - [ ] add product
+  - [ ] update product
+  - [ ] remove product
+
 - [ ] refine toast messages for the correct status and display normal messages for the rest
 - [ ]
 

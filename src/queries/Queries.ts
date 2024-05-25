@@ -33,15 +33,27 @@ export const searchDataQuery: SearchDataQueryType = async (
 
 // users
 export interface IUser {
-  id: number;
+  id?: number;
   name: string;
   email: string;
   email_verified_at?: string | null;
-  role?: string;
+  role: string;
   google_id?: string | number | null;
   google_token?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
+  password: string | undefined;
+}
+export interface IUserRegister {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+export interface IUserUpdate {
+  name: string;
+  email: string;
+  role: string;
 }
 export const usersQuery: () => Promise<AxiosResponse<IUser>> = async () =>
   await AXIOS.get(`${USERS}`);
@@ -55,13 +67,19 @@ export const userDeleteQuery: UserDeleteQueryType = async (id) =>
   await AXIOS.delete(`${USER}/${id}`);
 
 // categories
-export interface ICategorie {
+export interface ICategory {
   id: number;
   title: string;
   image?: string;
   created_at?: string;
   updated_at?: string;
 }
+export interface ICategoryAdd {
+  title: string;
+  image: FileList;
+}
+
+// export const categoriesQuery
 
 // products
 export interface IProduct {

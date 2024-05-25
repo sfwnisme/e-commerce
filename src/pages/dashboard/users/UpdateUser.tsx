@@ -5,26 +5,23 @@ import { UpdateUserYupSchema } from "../../../utils/yupSchema";
 import { useMutation } from "@tanstack/react-query";
 import { AXIOS, USER } from "../../../utils/AXIOS";
 import { useParams } from "react-router-dom";
-import { ErrorResponseType, UdpateUserInput } from "../../../types/Types";
+import { ErrorResponseType } from "../../../types/Types";
 import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import UsersRoleOption from "../../../components/UsersRoleOption";
 import useGetSingleData from "../../../hooks/use-get-single-data";
 import Btn from "../../../components/Btn";
 import Skeleton from "react-loading-skeleton";
+import { IUserUpdate } from "../../../queries/Queries";
 
 const UpdateUser = () => {
   const { id } = useParams();
 
-  const {
-    data: userData,
-    isLoading,
-    isError,
-  } = useGetSingleData(USER, id as string);
+  const { data: userData, isLoading } = useGetSingleData(USER, id);
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["updateUser"],
-    mutationFn: async (data: UdpateUserInput) =>
+    mutationFn: async (data: IUserUpdate) =>
       await AXIOS.post(`${USER}/edit/${id}`, data),
   });
 
@@ -33,8 +30,7 @@ const UpdateUser = () => {
     handleSubmit,
     formState: { errors, isValid },
     getValues,
-    setValue,
-  } = useForm<UdpateUserInput>({
+  } = useForm<IUserUpdate>({
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(UpdateUserYupSchema),
@@ -43,24 +39,7 @@ const UpdateUser = () => {
     },
   });
 
-  // console.log("before", isLoadingInputs);
-  // useEffect(() => {
-  //   if (userData) {
-  //     setValue(
-  //       "userData",
-  //       {
-  //         name: userData?.data?.name,
-  //         email: userData?.data?.email,
-  //         role: userData?.data?.role,
-  //       },
-  //       {
-  //         shouldDirty: true,
-  //       }
-  //     );
-  //   }
-  // }, [id, userData, setValue]);
-
-  const onSubmit: SubmitHandler<UdpateUserInput> = async (data) => {
+  const onSubmit: SubmitHandler<IUserUpdate> = async (data) => {
     try {
       const res = await mutateAsync(data);
       toast.success("You have successfully updated user");
