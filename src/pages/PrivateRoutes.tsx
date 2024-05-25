@@ -17,6 +17,7 @@ const PrivateRoutes: React.FC<PrivateRoutesProps> = ({ roles }) => {
   if (TOKEN && !roles?.includes(userRole)) {
     return <UnauthorizedRoute />;
   }
+
   return <Navigate to="/login" replace />;
   // return <div>kjdfjkjkjdfkj</div>;
 };

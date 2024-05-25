@@ -1,22 +1,7 @@
 import { useEffect, useState } from "react";
 import useGetData from "./use-get-data";
-import { AXIOS } from "../utils/AXIOS";
-import {
-  QueryCache,
-  QueryClient,
-  useMutation,
-  useQuery,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { searchDataQuery } from "../queries/Queries";
-
-// type Params = {
-//   endpoint: string;
-//   searchEndpoint: string;
-//   limit: number;
-//   pages: number;
-//   objectKey: string;
-//   search: string;
-// };
 
 const useGetDataAndSearch = (
   endpoint: string,
@@ -26,8 +11,7 @@ const useGetDataAndSearch = (
   objectKey: string,
   search: string
 ) => {
-  const [searchData, setSearchData] = useState([]);
-  // const [searchLoading, setSearchLoading] = useState(false);
+  // const [dataNotFound, setDataNotFound] = useState(false);
   const [searchNotFound, setSearchNotFound] = useState(true);
   const { data, isLoading, isError, refetch } = useGetData(
     endpoint,
@@ -35,32 +19,35 @@ const useGetDataAndSearch = (
     pages
   );
   const entireData = data?.data?.data;
-  console.log(data);
+  const dataNotFound = data?.data?.data?.length > 0 ? false : true;
+
+  console.log(dataNotFound);
 
   const {
-    data: hhh,
+    data: allSearchData,
     mutateAsync,
-    status,
     isPending: searchLoading,
   } = useMutation({
-    mutationKey: ["search", searchEndpoint, search],
+    mutationKey: ["search", endpoint, `query=${search}`],
     mutationFn: () => searchDataQuery(searchEndpoint, objectKey, search),
+
     onSuccess: (data) => {
-      // console.log("hhhhhhhhhhhhhhhhhhhhhhhhh", data);
-      setSearchData(data?.data);
+      console.log("the data", data?.data);
+      setSearchNotFound(data?.data?.length > 0 ? false : true);
     },
   });
 
-  console.log("hhhhhhhhhhhhhhh", searchNotFound);
+  const searchData = allSearchData?.data;
+
+  console.log("hhhhhhhhh", searchData);
 
   const handleSearch = async () => {
     try {
       // make sure you have a search value before request
-      search !== "" && mutateAsync(search);
-      setSearchNotFound(searchData?.length > 0 ? false : true);
+      search !== "" ? await mutateAsync() : null;
     } catch (error) {
       console.log(error);
-    } 
+    }
   };
 
   // const handleSearch = async () => {
@@ -96,7 +83,7 @@ const useGetDataAndSearch = (
 
   // return the original data or the searched data in a single variable to prevent duplications
   const dataOrSearch =
-    searchData?.length > 0 && search !== "" ? searchData : entireData;
+    searchData?.length !== 0 && search !== "" ? searchData : entireData;
 
   const finalData = {
     entireData,
@@ -108,6 +95,7 @@ const useGetDataAndSearch = (
     isError,
     search,
     searchNotFound,
+    dataNotFound,
     refetch,
   };
 

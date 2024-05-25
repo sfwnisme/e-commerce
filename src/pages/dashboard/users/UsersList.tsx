@@ -1,16 +1,14 @@
-import { AXIOS, USER } from "../../../utils/AXIOS";
 import { Table } from "flowbite-react";
 import { dummyArray, getTheRole } from "../../../utils/utils";
 import { AiFillEdit } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import {
-  ApiIdRequest,
   DataType,
   ErrorResponseType,
   handleRemoveUserType,
 } from "../../../types/Types";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { toast } from "react-toastify";
 import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import Btn from "../../../components/Btn";
@@ -19,27 +17,27 @@ import Skeleton from "react-loading-skeleton";
 import { IUser, userDeleteQuery } from "../../../queries/Queries";
 
 interface IProps {
-  entireData: IUser[];
-  dataOrSearch: IUser[];
-  limit: number;
-  pages?: number;
-  isLoading: boolean;
-  searchLoading: boolean;
-  isError: boolean;
-  search: string;
-  searchNotFound: boolean;
-  refetch: () => void;
+  finalData: {
+    dataOrSearch: IUser[];
+    limit: number;
+    pages?: number;
+    isLoading: boolean;
+    searchLoading: boolean;
+    isError: boolean;
+    search: string;
+    searchNotFound: boolean;
+    dataNotFound: boolean;
+    refetch: () => void;
+  };
 }
 
-const removeUserRequest: ApiIdRequest = async (id) =>
-  await AXIOS.delete(`${USER}/${id}`);
+// const removeUserRequest: ApiIdRequest = async (id) =>
+//   await AXIOS.delete(`${USER}/${id}`);
 
-const UsersList = ({ finalData }: { finalData: IProps }) => {
-  console.log(finalData?.entireData);
+const UsersList: React.FC<IProps> = ({ finalData }) => {
   const userIdRef = useRef<number | null>(null);
 
   const {
-    entireData,
     dataOrSearch,
     limit,
     isLoading,
@@ -47,6 +45,7 @@ const UsersList = ({ finalData }: { finalData: IProps }) => {
     isError,
     search,
     searchNotFound,
+    dataNotFound,
     refetch,
   } = finalData;
 
@@ -135,28 +134,12 @@ const UsersList = ({ finalData }: { finalData: IProps }) => {
   // the returned DOM
   if (isLoading || (search !== "" && searchLoading)) return usersListLoading;
 
-  if (
-    (entireData?.length === 0 && !isLoading) ||
-    (search !== "" && searchNotFound)
-  )
+  if ((dataNotFound && !isLoading) || (search !== "" && searchNotFound))
     return usersListNotfound;
 
   if (!isLoading && isError) return usersListError;
 
   return usersList;
-
-  // return (
-  //   <>
-  //     {isLoading
-  //       ? usersListLoading
-  //       : entireData?.length <= 0 && !isLoading
-  //       ? usersListNotfound
-  //       : usersList}
-  //     {/* {usersList} */}
-  //     {/* {usersListLoading} */}
-  //     {/* {usersListNotfound} */}
-  //   </>
-  // );
 };
 
 export default UsersList;

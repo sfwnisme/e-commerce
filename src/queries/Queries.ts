@@ -53,3 +53,35 @@ export const userQuery = async (id: string) => await AXIOS.get(`${USER}/${id}`);
 type UserDeleteQueryType = (id: string) => Promise<AxiosResponse>;
 export const userDeleteQuery: UserDeleteQueryType = async (id) =>
   await AXIOS.delete(`${USER}/${id}`);
+
+// categories
+export interface ICategorie {
+  id: number;
+  title: string;
+  image?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+// products
+export interface IProduct {
+  id: number;
+  title: string;
+  description?: string;
+  About?: string;
+  price: string;
+  discount?: string;
+  images?: {
+    id: number;
+    image: string;
+    prdouct_id?: number;
+    created_at?: string;
+    updated_at?: string;
+  }[];
+  category: number;
+  rating?: string;
+  ratings_number?: string;
+  status?: string;
+  created_at?: string;
+  updated_at?: string;
+}

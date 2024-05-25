@@ -10,10 +10,10 @@ import { AiFillEdit } from "react-icons/ai";
 import { useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { IProduct } from "../../../queries/Queries";
 
 interface Props {
-  entireData: any[];
-  dataOrSearch: any[];
+  dataOrSearch: IProduct[];
   limit: number;
   pages: number;
   isLoading: boolean;
@@ -21,6 +21,7 @@ interface Props {
   isError: boolean;
   search: string;
   searchNotFound: boolean;
+  dataNotFound: boolean;
   refetch: () => void;
 }
 interface DataType<T> {
@@ -51,7 +52,6 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
   const productIdRef = useRef<number | null>(null);
 
   const {
-    entireData,
     dataOrSearch,
     limit,
     pages,
@@ -60,6 +60,7 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
     isError,
     search,
     searchNotFound,
+    dataNotFound,
     refetch,
   } = finalData;
 
@@ -81,27 +82,22 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
       }) => cate?.id === +id
     );
 
-  console.log(theCategory(639)?.title);
-
-  // useEffect(() => {
-  //   refetch();
-  // }, []);
-
-  const { mutateAsync } = useMutation({
-    mutationKey: ["deleteproduct"],
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["deleteproduct", productIdRef?.current],
     mutationFn: async (id: string) => await removeUserRequest(id),
   });
 
+  console.log("aklsdjlajsdf", productIdRef);
   const handleRemoveProduct = async (id: number) => {
+    productIdRef.current = Number(id);
+    console.log(id)
     try {
-      await toast.promise(mutateAsync(`${id}`), {
-        pending: "deleting",
-        success: "deleted",
-        error: "failed to delete",
-      });
+      await mutateAsync(`${id}`);
       refetch();
     } catch (error) {
       console.log(error);
+    } finally {
+      productIdRef.current = null;
     }
   };
 
@@ -145,62 +141,57 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
     </Table.Row>
   );
 
-  const productsList = dataOrSearch?.map(
-    (product: DataType<string | number>, idx) => (
-      <Table.Row
-        className="bg-white dark:border-gray-700 dark:bg-gray-800"
-        key={product?.id}
-      >
-        <Table.Cell>{product?.id}</Table.Cell>
-        <Table.Cell>{product?.title}</Table.Cell>
-        <Table.Cell className="grid grid-cols-2">
-          {product?.images?.map((img) => (
-            <img
-              src={img?.image}
-              title={img?.image}
-              key={img?.id}
-              id={img?.id}
-              className="w-20"
-            />
-          ))}
-        </Table.Cell>
-        <Table.Cell>{theCategory(product?.category)?.title}</Table.Cell>
-        <Table.Cell>{product?.price}</Table.Cell>
-        <Table.Cell>{product?.description}</Table.Cell>
-        <Table.Cell className="flex items-center gap-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+  const productsList = dataOrSearch?.map((product: IProduct) => (
+    <Table.Row
+      className="bg-white dark:border-gray-700 dark:bg-gray-800"
+      key={product?.id}
+    >
+      <Table.Cell>{product?.id}</Table.Cell>
+      <Table.Cell>{product?.title}</Table.Cell>
+      <Table.Cell className="grid grid-cols-2">
+        {product?.images?.map((img) => (
+          <img
+            src={img?.image}
+            title={img?.image}
+            key={img?.id.toString()}
+            id={img?.id.toString()}
+            className="w-20"
+          />
+        ))}
+      </Table.Cell>
+      <Table.Cell>{theCategory(product?.category)?.title}</Table.Cell>
+      <Table.Cell>{product?.price}</Table.Cell>
+      <Table.Cell>{product?.description}</Table.Cell>
+      <Table.Cell className="flex items-center gap-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+        <Btn
+          node={<FiTrash />}
+          color="failure"
+          size="sm"
+          outline
+          type="submit"
+          // isLoading={productIdRef.current === product?.id ? isPending : false}
+          isValid={true}
+          isLoading={productIdRef.current === product?.id ? isPending : false}
+          onClick={() => handleRemoveProduct(product?.id)}
+        />
+        <NavLink to={`edit/${product?.id}`} className="border rounded-lg">
           <Btn
-            node={<FiTrash />}
-            color="failure"
+            node={<AiFillEdit />}
+            color="blue"
             size="sm"
             outline
             type="submit"
-            // isLoading={productIdRef.current === product?.id ? isPending : false}
             isValid={true}
             isLoading={false}
-            onClick={() => handleRemoveProduct(product?.id)}
           />
-          <NavLink to={`edit/${product?.id}`} className="border rounded-lg">
-            <Btn
-              node={<AiFillEdit />}
-              color="blue"
-              size="sm"
-              outline
-              type="submit"
-              isValid={true}
-              isLoading={false}
-            />
-          </NavLink>
-        </Table.Cell>
-      </Table.Row>
-    )
-  );
+        </NavLink>
+      </Table.Cell>
+    </Table.Row>
+  ));
 
   // the returned DOM
   if (isLoading || (search !== "" && searchLoading)) return productsListLoading;
-  if (
-    (entireData?.length === 0 && !isLoading) ||
-    (search !== "" && searchNotFound)
-  )
+  if ((dataNotFound && !isLoading) || (search !== "" && searchNotFound))
     return productsListNotfound;
 
   if (!isLoading && isError) return productsListError;
@@ -209,10 +200,3 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
 };
 
 export default ProductsList;
-
-// return isLoading || (search !== "" && searchLoading)
-// ? categoriesListLoading
-// : (entireData.length === 0 && !isLoading) ||
-//   (search !== "" && searchNotFound)
-// ? categoriesListNotfound
-// : categoriesList;

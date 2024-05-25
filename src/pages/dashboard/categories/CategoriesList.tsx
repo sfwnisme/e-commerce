@@ -1,8 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Alert, Table } from "flowbite-react";
-import { AXIOS, CATEGORIES, CATEGORY } from "../../../utils/AXIOS";
-import { CategoriesDataType, ErrorResponseType } from "../../../types/Types";
-import useGetData from "../../../hooks/use-get-data";
+import { AXIOS, CATEGORY } from "../../../utils/AXIOS";
+import { ErrorResponseType } from "../../../types/Types";
 import { FiTrash } from "react-icons/fi";
 import Btn from "../../../components/Btn";
 import { NavLink } from "react-router-dom";
@@ -12,10 +11,10 @@ import { toast } from "react-toastify";
 import { useRef } from "react";
 import Skeleton from "react-loading-skeleton";
 import { dummyArray } from "../../../utils/utils";
+import { ICategorie } from "../../../queries/Queries";
 
 interface Props {
-  entireData: any[];
-  dataOrSearch: any[];
+  dataOrSearch: ICategorie[];
   limit: number;
   pages: number;
   isLoading: boolean;
@@ -23,6 +22,7 @@ interface Props {
   isError: boolean;
   search: string;
   searchNotFound: boolean;
+  dataNotFound: boolean;
   refetch: () => void;
 }
 type DataType = {
@@ -35,7 +35,6 @@ const CategoriesList = ({ finalData }: { finalData: Props }) => {
   const categoryIdRef = useRef<number | null>(null); // get exact deleted element to handle its loading
 
   const {
-    entireData,
     dataOrSearch,
     limit,
     pages,
@@ -44,6 +43,7 @@ const CategoriesList = ({ finalData }: { finalData: Props }) => {
     isError,
     search,
     searchNotFound,
+    dataNotFound,
     refetch,
   } = finalData;
 
@@ -110,7 +110,15 @@ const CategoriesList = ({ finalData }: { finalData: Props }) => {
     </Table.Row>
   ));
 
-  const categoriesList = dataOrSearch?.map((category: CategoriesDataType) => (
+  const categoriesListError = (
+    <Table.Row>
+      <Table.Cell colSpan={12} style={{ textAlign: "center" }}>
+        Error!?
+      </Table.Cell>
+    </Table.Row>
+  );
+
+  const categoriesList = dataOrSearch?.map((category: ICategorie) => (
     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
       <Table.Cell>{category?.id}</Table.Cell>
       <Table.Cell>{category?.title}</Table.Cell>
@@ -143,19 +151,19 @@ const CategoriesList = ({ finalData }: { finalData: Props }) => {
     </Table.Row>
   ));
 
-  return isLoading || (search !== "" && searchLoading)
-    ? categoriesListLoading
-    : (entireData.length === 0 && !isLoading) ||
-      (search !== "" && searchNotFound)
-    ? categoriesListNotfound
-    : categoriesList;
+  // the retuned DOM
+
+  console.log(!dataNotFound);
+
+  if (isLoading || (search !== "" && searchLoading))
+    return categoriesListLoading;
+
+  if (!isLoading && isError) return categoriesListError;
+
+  if ((dataNotFound && !isLoading) || (search !== "" && searchNotFound))
+    return categoriesListNotfound;
+
+  return categoriesList;
 };
 
 export default CategoriesList;
-
-// return isLoading || (search !== "" && searchLoading)
-// ? categoriesListLoading
-// : (categoriesDATA.length === 0 && !isLoading) ||
-//   (search !== "" && searched.length === 0)
-// ? categoriesListNotfound
-// : categoriesList;

@@ -17,6 +17,8 @@ const useGetData = (endpoint: string, limit: number, pages: number) => {
     // select: (items) => items?.data?.data?.sort(sortByDate),
   });
 
+  console.log("data types =============", query?.data?.data?.data);
+
   return { ...query };
 };
 
