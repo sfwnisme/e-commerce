@@ -81,18 +81,18 @@ For more information about the above error [read more](https://stackoverflow.com
 
   categories
   - [x] categories
-  - [ ] add category
-  - [ ] update category
-  - [ ] remove category
+  - [x] add category
+  - [x] update category
+  - [x] remove category
 
   products
-  - [ ] products
+  - [x] products
   - [ ] add product
   - [ ] update product
   - [ ] remove product
 
 - [ ] refine toast messages for the correct status and display normal messages for the rest
-- [ ]
+- [ ] separate public ,private, paginated data APIs
 
 #### tips
 

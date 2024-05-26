@@ -1,7 +1,7 @@
 import { FileInput, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { AddCategoryYupSchema } from "../../../utils/yupSchema";
-import { AddCategoryInputs, ErrorResponseType } from "../../../types/Types";
+import { ErrorResponseType } from "../../../types/Types";
 import { useParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { AXIOS, CATEGORY } from "../../../utils/AXIOS";
@@ -12,6 +12,7 @@ import { ServerErrorResponse } from "../../../utils/HandleLoadingAndError";
 import { toast } from "react-toastify";
 import Btn from "../../../components/Btn";
 import Skeleton from "react-loading-skeleton";
+import { ICategoryAdd } from "../../../queries/Queries";
 
 const UpdateCategory = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -21,25 +22,21 @@ const UpdateCategory = () => {
     mutationKey: ["updateCategory", id],
     mutationFn: async (data: FormData) =>
       await AXIOS.post(`${CATEGORY}/edit/${id}`, data),
-    
   });
 
-  const { data, isLoading, isError } = useGetSingleData(CATEGORY, id as string);
+  const { data, isLoading, isError } = useGetSingleData(CATEGORY, id);
   const categoryData = data?.data;
-
-  console.log("categoryData", categoryData);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
     getValues,
-  } = useForm<AddCategoryInputs>({
+  } = useForm<ICategoryAdd>({
     mode: "onChange",
     reValidateMode: "onChange",
-    resolver: yupResolver(AddCategoryYupSchema),
+    resolver: yupResolver<ICategoryAdd>(AddCategoryYupSchema),
     values: {
-      // ...categoryData,
       title: isLoading
         ? "loading..."
         : isError && !isLoading
@@ -48,7 +45,7 @@ const UpdateCategory = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<AddCategoryInputs> = async (data) => {
+  const onSubmit: SubmitHandler<ICategoryAdd> = async (data) => {
     const FD = new FormData();
     FD.append("image", image as File);
     FD.append("title", data?.title);
@@ -59,7 +56,6 @@ const UpdateCategory = () => {
     } catch (error) {
       console.log(error);
       toast.error(ServerErrorResponse(error as ErrorResponseType));
-      console.log(ServerErrorResponse(error as ErrorResponseType));
     }
   };
 
@@ -80,7 +76,6 @@ const UpdateCategory = () => {
       <Btn
         text="Update"
         color="blue"
-        width={10}
         size="sm"
         outline={false}
         type="submit"

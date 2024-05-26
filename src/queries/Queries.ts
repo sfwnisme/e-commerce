@@ -76,7 +76,7 @@ export interface ICategory {
 }
 export interface ICategoryAdd {
   title: string;
-  image: FileList;
+  image?: FileList | null;
 }
 
 // export const categoriesQuery

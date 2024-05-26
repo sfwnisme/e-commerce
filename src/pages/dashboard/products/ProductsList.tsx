@@ -9,52 +9,32 @@ import { NavLink } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
 import { useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { IProduct } from "../../../queries/Queries";
 
-interface Props {
-  dataOrSearch: IProduct[];
-  limit: number;
-  pages: number;
-  isLoading: boolean;
-  searchLoading: boolean;
-  isError: boolean;
-  search: string;
-  searchNotFound: boolean;
-  dataNotFound: boolean;
-  refetch: () => void;
+interface IProps {
+  finalData: {
+    dataOrSearch: IProduct[];
+    limit: number;
+    pages: number;
+    isLoading: boolean;
+    searchLoading: boolean;
+    isError: boolean;
+    search: string;
+    searchNotFound: boolean;
+    dataNotFound: boolean;
+    refetch: () => void;
+  };
 }
-interface DataType<T> {
-  id: number;
-  category: number;
-  title: string;
-  description: string;
-  rating?: T;
-  ratings_number?: number;
-  price?: number;
-  discount?: number;
-  About?: string;
-  status?: string | boolean;
-  created_at?: Date | string;
-  updated_at?: Date | string;
-  images?: {
-    id?: number;
-    product_id?: number;
-    image?: string;
-    created_at?: Date | string;
-    updated_at?: Date | string;
-  }[];
-}
+
 const removeUserRequest = async (id: string) =>
   await AXIOS.delete(`${PRODUCT}/${id}`);
 
-const ProductsList = ({ finalData }: { finalData: Props }) => {
+const ProductsList: React.FC<IProps> = ({ finalData }) => {
   const productIdRef = useRef<number | null>(null);
 
   const {
     dataOrSearch,
     limit,
-    pages,
     isLoading,
     searchLoading,
     isError,
@@ -90,7 +70,7 @@ const ProductsList = ({ finalData }: { finalData: Props }) => {
   console.log("aklsdjlajsdf", productIdRef);
   const handleRemoveProduct = async (id: number) => {
     productIdRef.current = Number(id);
-    console.log(id)
+    console.log(id);
     try {
       await mutateAsync(`${id}`);
       refetch();

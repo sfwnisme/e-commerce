@@ -22,7 +22,7 @@ const AddCategory = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["AddCategory"],
-    mutationFn: async (data: ICategoryAdd) =>
+    mutationFn: async (data: FormData) =>
       await AXIOS.post(`${CATEGORY}/add`, data),
   });
 
@@ -40,16 +40,13 @@ const AddCategory = () => {
     console.log("|||||||||||||||||||||", data?.image?.[0]);
     if (data?.image) {
       const imageFile = data?.image?.[0];
-      FD.append("image", imageFile);
+      FD.append("image", imageFile as File);
     }
     FD.append("title", data.title);
+
+    console.log(FD.get("title"), FD.get("image"));
     try {
-      const res = await toast.promise(mutateAsync(FD), {
-        pending: "creating",
-        success: "created",
-        error: "error",
-      });
-      // toast.success("You have successfully added category");
+      const res = await mutateAsync(FD);
       navigate("/dashboard/categories");
       console.log(res);
     } catch (error) {

@@ -1,6 +1,4 @@
-import React from "react";
-import useGetSingleData from "./use-get-single-data";
-import { AXIOS, CATEGORIES, CATEGORY, PRODUCT } from "../utils/AXIOS";
+import { AXIOS, CATEGORIES, CATEGORY } from "../utils/AXIOS";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -21,18 +19,13 @@ const useGetTheCategoryTitle = () => {
   const getTheCategoryTitle = theCategoriesData?.find(
     (cate) => cate?.id === theId
   );
-  console.log(getTheCategoryTitle?.title);
-  // const { data: data } = useGetSingleData(CATEGORY, theId);
-  console.log(data);
+
   let categoryTitle;
   if (window?.location?.pathname === `/categories/${id}`) {
-    console.log(true);
     categoryTitle = getTheCategoryTitle?.title;
   } else {
     categoryTitle = "";
   }
-
-  console.log(categoryTitle);
 
   return categoryTitle;
 };

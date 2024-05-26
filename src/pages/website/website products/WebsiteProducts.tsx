@@ -2,8 +2,8 @@ import WebsiteProductsList from "./WebsiteProductsList";
 import SectionTitle from "../../../components/SectionTitle";
 import useGetTheCategoryTitle from "../../../hooks/useGetTheCategoryTitle";
 
-const WebsiteProducts = ({ productsType }) => {
-  const categoryTitle = useGetTheCategoryTitle(productsType);
+const WebsiteProducts = ({ productsType }: { productsType: string }) => {
+  const categoryTitle = useGetTheCategoryTitle();
   console.log(categoryTitle);
   return (
     <div className="py-12">
