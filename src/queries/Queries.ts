@@ -103,3 +103,12 @@ export interface IProduct {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface IProductAdd {
+  title: string;
+  description: string;
+  About: string;
+  price: string;
+  discount: string;
+  category: number;
+}

@@ -15,8 +15,9 @@ import Skeleton from "react-loading-skeleton";
 import { useGetCurrentUser } from "../../../hooks/use-get-current-user";
 import { useMutation } from "@tanstack/react-query";
 import { handleImagesUpload } from "../../../hooks/handleImagesUpload";
+import { IProductAdd } from "../../../queries/Queries";
 //======================
-interface FileData {
+export interface FileData {
   name: string;
   size?: number;
   type?: string;
@@ -30,11 +31,16 @@ interface Dummy {
   discount: number;
   About: string;
 }
+
+interface Image {
+  url: string;
+  name: string;
+}
 //=======================
 
 const AddProduct = () => {
   const [sendDummy, setSendDummy] = useState(false);
-  const [images, setImages] = useState<FileData[]>([]);
+  const [images, setImages] = useState<File[]>([]);
   const [productId, setProductId] = useState("");
   const [dummyForm] = useState<Dummy>({
     category: null,
@@ -46,11 +52,13 @@ const AddProduct = () => {
   });
 
   // refs
-  const progressRef = useRef<never[]>([]);
+  const progressRef = useRef<HTMLSpanElement[] | null>([]);
   const progressIdxRef = useRef(0);
   const idsRef = useRef<number[]>([]);
   const imageInputRef = useRef(null);
   const navigate = useNavigate();
+
+  console.log("progressRef", progressRef?.current);
 
   // current user => using the current user for the loading process of the skeleton
   const { isLoading } = useGetCurrentUser();
@@ -60,7 +68,7 @@ const AddProduct = () => {
     handleSubmit,
     getValues,
     formState: { errors, isValid },
-  } = useForm<AddProductInputs>({
+  } = useForm<IProductAdd>({
     mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(AddProductYupSchema),
@@ -70,16 +78,12 @@ const AddProduct = () => {
   // edit the dummy data how has the {productId} saved from the {handleDummyForm} function
   const { mutateAsync: mutateAsyncEdit } = useMutation({
     mutationKey: ["product"],
-    mutationFn: async (data: AddProductInputs) =>
+    mutationFn: async (data: IProductAdd) =>
       await AXIOS.post(`${PRODUCT}/edit/${productId}`, data),
   });
-  const onSubmit: SubmitHandler<AddProductInputs> = async (data) => {
+  const onSubmit: SubmitHandler<IProductAdd> = async (data) => {
     try {
-      const res = await toast.promise(mutateAsyncEdit(data), {
-        pending: "creating product",
-        success: "product created",
-        error: "could not create the product",
-      });
+      const res = await mutateAsyncEdit(data);
       console.log(res);
       location.pathname = "/dashboard/products";
       navigate(`/dashboard/products`);
@@ -112,12 +116,11 @@ const AddProduct = () => {
   //========================
   const { mutateAsync: mutateAsyncRemove } = useMutation({
     mutationKey: ["removeProductsImage"],
-    mutationFn: async (id: string) => await AXIOS.delete(`/product-img/${id}`),
+    mutationFn: async (id: number) => await AXIOS.delete(`/product-img/${id}`),
   });
 
-  const handleRemove = async (imgId, image, imgIdx) => {
-    const findImgId = idsRef.current[imgIdx];
-    console.log(findImgId);
+  const handleRemove = async (imgId: number, image: File, imgIdx: number) => {
+    const findImgId: number = idsRef.current[imgIdx];
     try {
       await toast.promise(mutateAsyncRemove(imgId || findImgId), {
         pending: "deleting",
@@ -134,14 +137,12 @@ const AddProduct = () => {
     }
   };
 
-  console.log(productId);
-
   // handle the image API data posting
   const handleImages = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleImagesUpload(
       e,
       productId,
-      setImages,
+      setImages as React.Dispatch<React.SetStateAction<Image[]>>,
       progressRef,
       progressIdxRef,
       idsRef

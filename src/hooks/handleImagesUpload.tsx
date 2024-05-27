@@ -9,7 +9,7 @@ interface Image {
 type ParamsTypes = (
   e: React.ChangeEvent<HTMLInputElement>,
   productId: string,
-  setImages: React.Dispatch<React.SetStateAction<Image[]>>,
+  setImages: React.Dispatch<React.SetStateAction<Image[]>>, // Add type for setImages parameter
   progressRef: React.MutableRefObject<never[]>,
   progressIdxRef: React.MutableRefObject<number>,
   idsRef: React.MutableRefObject<number[]>

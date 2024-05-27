@@ -76,7 +76,7 @@ export const AddProductYupSchema = yup.object({
     .string()
     .required("description is required")
     .min(2, "description is required"),
-  price: yup.number().required("price is required"),
+  price: yup.string().required("price is required"),
   discount: yup.string().required("discount is required"),
   About: yup.string().required("about is required").min(2, "about is required"),
 });
