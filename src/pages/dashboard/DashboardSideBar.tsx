@@ -28,10 +28,13 @@ const DashboardSideBar = ({ toggle }: { toggle: boolean }) => {
     <Sidebar
       aria-label="Sidebar with logo branding example"
       className={`
-      border-r border-b ${toggle ? "block" : "hidden"} sm:block basis-28
+      border-r border-b ${toggle ? "block" : "hidden"} md:block basis-28
       h-[calc(100vh-61.6px)]
-      sticky
-      top-0
+      md:sticky
+      md:top-0
+      fixed
+      z-10
+      top-[62px]
       `}
     >
       <Sidebar.Logo

@@ -112,3 +112,4 @@ export interface IProductAdd {
   discount: string;
   category: number;
 }
+console.log(isFinite(3));

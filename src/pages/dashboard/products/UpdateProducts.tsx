@@ -30,7 +30,9 @@ const UpdateProductRequest = async (id: number, data: AddProductInputs) =>
 const UpdateProducts = () => {
   const [images, setImages] = useState<FileData[]>([]);
   const [deletedImgsIds, setDeletedImgsIds] = useState<number[]>([]);
-  const [oldImgs, setOldImgs] = useState();
+  const [oldImgs, setOldImgs] = useState<
+    { name: string; id: number; image: string }[]
+  >([]);
   const { id } = useParams<string>();
   const productId = id!;
   console.log(productId);
@@ -41,7 +43,7 @@ const UpdateProducts = () => {
   const idsRef = useRef<number[]>([]);
 
   //==============================
-  const { data, isLoading, isError } = useGetSingleData(PRODUCT, id as string);
+  const { data, isLoading } = useGetSingleData(PRODUCT, id as string);
   const productData = data?.data[0];
 
   //==============================
@@ -163,7 +165,7 @@ const UpdateProducts = () => {
               className="flex-1 text-[11px]"
               title={img?.image?.split("/").pop()}
             >
-              {shortTheText(img?.image?.split("/").pop(), 10)}
+              {shortTheText(img?.image?.split("/").pop() || "", 10)}
             </small>
           </div>
         </div>

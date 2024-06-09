@@ -9,7 +9,7 @@ const DashboardNav = ({ setToggle }: DashboardSideBarProps) => {
   return (
     <Navbar fluid className="border ">
       <Navbar.Toggle
-        className="h-9 w-9 sm:hidden"
+        className="h-9 w-9 md:hidden"
         onClick={() => setToggle((prev) => !prev)}
       />
       <Navbar.Brand>

@@ -87,12 +87,12 @@ For more information about the above error [read more](https://stackoverflow.com
 
   products
   - [x] products
-  - [ ] add product
+  - [x] add product
   - [ ] update product
   - [ ] remove product
 
 - [ ] refine toast messages for the correct status and display normal messages for the rest
-- [ ] separate public ,private, paginated data APIs
+- [ ] separate public ,private and paginated data APIs
 
 #### tips
 
